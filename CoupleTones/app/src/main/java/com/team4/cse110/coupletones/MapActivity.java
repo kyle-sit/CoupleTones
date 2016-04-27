@@ -20,9 +20,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class LocalUserActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     /**
@@ -71,40 +72,41 @@ public class LocalUserActivity extends FragmentActivity implements OnMapReadyCal
             mMap.setMyLocationEnabled(true);
         }
 
-        LocationListener locationListener = new LocationListener(){
+        LocationListener locationListener = new LocationListener()
+        {
             @Override
             public void onLocationChanged(Location location) {
-                //mMap.clear();
                 //called when a new location is found by the network location provider
                 LatLng tempLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(tempLocation).title("updated path"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(tempLocation, zoomLevel));
+
             }
 
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
-
             }
 
             @Override
             public void onProviderEnabled(String provider) {
-
             }
 
             @Override
             public void onProviderDisabled(String provider) {
-
             }
 
-
         };
-
-        mMap.addMarker(new MarkerOptions().position(new LatLng(10, 10)).title("Hello world"));
-
 
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         String locationProvider = LocationManager.GPS_PROVIDER;
         locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Random Marker"));
+            }
+        });
+
     }
 
     @Override
