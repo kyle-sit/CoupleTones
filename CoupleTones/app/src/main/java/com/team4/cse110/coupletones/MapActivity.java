@@ -1,7 +1,9 @@
 package com.team4.cse110.coupletones;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -10,7 +12,9 @@ import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -108,7 +112,23 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                mMap.addMarker(new MarkerOptions().position(latLng).title("New Marker"));
+                AlertDialog.Builder buildDialog = new AlertDialog.Builder();
+                buildDialog.setTitle("Name your Favorite Location");
+                final EditText userInput = new EditText(this);
+
+                userInput.setInputType(InputType.TYPE_CLASS_TEXT);
+                buildDialog.setView(userInput);
+
+                buildDialog.setPositiveButton("Apply", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String markerTitle = userInput.getText().toString();
+
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
+
+                    }
+                })
+
             }
         });
 
