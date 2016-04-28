@@ -34,10 +34,7 @@ import java.util.HashMap;
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+    private final Context activityContext = this;
     private GoogleApiClient client;
     private HashMap<String, Marker> stringMarkerHashMap = new HashMap<String, Marker>();
 
@@ -112,9 +109,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                AlertDialog.Builder buildDialog = new AlertDialog.Builder();
+                AlertDialog.Builder buildDialog = new AlertDialog.Builder(activityContext);
                 buildDialog.setTitle("Name your Favorite Location");
-                final EditText userInput = new EditText(this);
+                final EditText userInput = new EditText(activityContext);
 
                 userInput.setInputType(InputType.TYPE_CLASS_TEXT);
                 buildDialog.setView(userInput);
@@ -124,10 +121,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     public void onClick(DialogInterface dialog, int which) {
                         String markerTitle = userInput.getText().toString();
 
-                        mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
+                        //mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
 
                     }
-                })
+                });
 
             }
         });
