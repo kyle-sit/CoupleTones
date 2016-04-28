@@ -36,7 +36,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private GoogleMap mMap;
     private final Context activityContext = this;
     private GoogleApiClient client;
-    private HashMap<String, Marker> stringMarkerHashMap = new HashMap<String, Marker>();
+    private HashMap<LatLng, Marker> latLngMarkerHashMap = new HashMap<LatLng, Marker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +108,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
-            public void onMapClick(LatLng latLng) {
+            public void onMapClick(final LatLng latLng) {
                 AlertDialog.Builder buildDialog = new AlertDialog.Builder(activityContext);
                 buildDialog.setTitle("Name your Favorite Location");
                 final EditText userInput = new EditText(activityContext);
@@ -121,10 +121,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     public void onClick(DialogInterface dialog, int which) {
                         String markerTitle = userInput.getText().toString();
 
-                        //mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
-
+                        Marker temp = mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
                     }
                 });
+
+                buildDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                buildDialog.show();
 
             }
         });
