@@ -36,7 +36,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private GoogleMap mMap;
     private final Context activityContext = this;
     private GoogleApiClient client;
-    private HashMap<LatLng, Marker> latLngMarkerHashMap = new HashMap<LatLng, Marker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +120,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                     public void onClick(DialogInterface dialog, int which) {
                         String markerTitle = userInput.getText().toString();
 
-                        Marker temp = mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
+                        Marker tempMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
+                        FavoriteLocation tempFav = new FavoriteLocation(tempMarker);
+
                     }
                 });
 
