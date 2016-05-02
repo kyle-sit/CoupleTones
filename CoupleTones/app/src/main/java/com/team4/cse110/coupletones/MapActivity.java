@@ -123,6 +123,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         Marker tempMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
                         FavoriteLocation tempFav = new FavoriteLocation(tempMarker);
 
+                        addFavoriteLocation(tempFav);
+
                     }
                 });
 
@@ -179,5 +181,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
+    }
+
+    public FavoriteLocation addFavoriteLocation(FavoriteLocation favoriteLocation)
+    {
+        return favoriteLocation;
     }
 }

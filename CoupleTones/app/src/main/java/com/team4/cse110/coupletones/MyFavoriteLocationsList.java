@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MyFavoriteLocationsList extends AppCompatActivity {
 
-    public List<FavoriteLocation> list;
+    private List<FavoriteLocation> list;
 
     public MyFavoriteLocationsList() {
 
@@ -26,19 +26,19 @@ public class MyFavoriteLocationsList extends AppCompatActivity {
         list.add(0, favoriteLocation);
     }
 
-    public void deleteLocation(FavoriteLocation favoriteLocation)
+    private void deleteLocation(FavoriteLocation favoriteLocation)
     {
         list.remove(favoriteLocation);
     }
 
-    public void editLocation(FavoriteLocation favoriteLocation)
+    private void editLocation(FavoriteLocation favoriteLocation)
     {
         AlertDialog.Builder buildDialog = new AlertDialog.Builder(this);
         buildDialog.setTitle("Name your Favorite Location");
         final EditText userInput = new EditText(this);
     }
 
-    public FavoriteLocation[] createArray()
+    private FavoriteLocation[] createArray()
     {
         return list.toArray(new FavoriteLocation[list.size()]);
     }
