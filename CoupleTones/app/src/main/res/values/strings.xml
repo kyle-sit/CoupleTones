@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CoupleTones</string>
     <string name="title_activity_local_user">Favorites_Map</string>
+    <string name="title_activity_my_favorite_locations_list">MyFavoriteLocationsList</string>
 </resources>
