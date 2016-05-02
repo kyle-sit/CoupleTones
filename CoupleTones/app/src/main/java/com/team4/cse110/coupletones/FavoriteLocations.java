@@ -15,26 +15,5 @@ import android.widget.EditText;
  */
 public class FavoriteLocations
 {
-    public HashSet<FavoriteLocation> favLocationsSet;
 
-    public FavoriteLocations()
-    {
-        favLocationsSet = new HashSet<FavoriteLocation>();
-    }
-
-    public void addLocation(FavoriteLocation favoriteLocation) {
-        favLocationsSet.add(favoriteLocation);
-    }
-
-    public void deleteLocation(FavoriteLocation favoriteLocation)
-    {
-        favLocationsSet.remove(favoriteLocation);
-    }
-
-    public void editLocation(FavoriteLocation favoriteLocation)
-    {
-        AlertDialog.Builder buildDialog = new AlertDialog.Builder();
-        buildDialog.setTitle("Name your Favorite Location");
-        final EditText userInput = new EditText();
-    }
 }

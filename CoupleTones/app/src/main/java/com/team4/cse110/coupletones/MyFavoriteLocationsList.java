@@ -9,31 +9,38 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class MyFavoriteLocationsList extends AppCompatActivity {
 
-    public HashSet<FavoriteLocation> favLocationsSet;
+    public List<FavoriteLocation> list;
 
-    public MyFavoriteLocationsList()
-    {
-        favLocationsSet = new HashSet<FavoriteLocation>();
+    public MyFavoriteLocationsList() {
+
+        list = new ArrayList<FavoriteLocation>();
     }
 
     public void addLocation(FavoriteLocation favoriteLocation) {
-        favLocationsSet.add(favoriteLocation);
+        list.add(0, favoriteLocation);
     }
 
     public void deleteLocation(FavoriteLocation favoriteLocation)
     {
-        favLocationsSet.remove(favoriteLocation);
+        list.remove(favoriteLocation);
     }
 
     public void editLocation(FavoriteLocation favoriteLocation)
     {
-        AlertDialog.Builder buildDialog = new AlertDialog.Builder();
+        AlertDialog.Builder buildDialog = new AlertDialog.Builder(this);
         buildDialog.setTitle("Name your Favorite Location");
-        final EditText userInput = new EditText();
+        final EditText userInput = new EditText(this);
+    }
+
+    public FavoriteLocation[] createArray()
+    {
+        return list.toArray(new FavoriteLocation[list.size()]);
     }
 
     @Override
