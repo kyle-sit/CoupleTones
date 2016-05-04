@@ -1,40 +1,52 @@
 package com.team4.cse110.coupletones;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 public class MyFavoriteLocationsList extends AppCompatActivity {
 
-    public HashSet<FavoriteLocation> favLocationsSet;
+    private List<FavoriteLocation> list;
 
-    public MyFavoriteLocationsList()
-    {
-        favLocationsSet = new HashSet<FavoriteLocation>();
+    public MyFavoriteLocationsList() {
+
+        list = new ArrayList<FavoriteLocation>();
     }
 
     public void addLocation(FavoriteLocation favoriteLocation) {
-        favLocationsSet.add(favoriteLocation);
+        list.add(0, favoriteLocation);
     }
 
-    public void deleteLocation(FavoriteLocation favoriteLocation)
+    private void deleteLocation(FavoriteLocation favoriteLocation)
     {
-        favLocationsSet.remove(favoriteLocation);
+        list.remove(favoriteLocation);
     }
 
-    public void editLocation(FavoriteLocation favoriteLocation)
+    private void editLocation(FavoriteLocation favoriteLocation)
     {
-        AlertDialog.Builder buildDialog = new AlertDialog.Builder();
-        buildDialog.setTitle("Name your Favorite Location");
-        final EditText userInput = new EditText();
+        AlertDialog.Builder buildDialog = new AlertDialog.Builder(this);
+        buildDialog.setTitle("Rename your Favorite Location");
+        final EditText userInput = new EditText(this);
+    }
+
+    private FavoriteLocation[] createArray()
+    {
+        return list.toArray(new FavoriteLocation[list.size()]);
     }
 
     @Override
@@ -44,14 +56,19 @@ public class MyFavoriteLocationsList extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        ListAdapter adapter = new ArrayAdapter<FavoriteLocation>(this, android.R.layout.simple_list_item_1,
+                                createArray());
+
+        ListView theListView = (ListView) findViewById(R.id.myFavoriteLocationsList);
+        theListView.setAdapter(adapter);
+
+        theListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
             }
         });
+
     }
 
 }
