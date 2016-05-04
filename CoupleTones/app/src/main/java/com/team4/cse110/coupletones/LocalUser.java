@@ -5,5 +5,13 @@ package com.team4.cse110.coupletones;
  */
 public class LocalUser
 {
+    private String name;
+
+    public LocalUser()
+    {
+
+
+    }
+
 
 }

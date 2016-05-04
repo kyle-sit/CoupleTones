@@ -95,19 +95,26 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         Fragment fragment = null;
-        Class fragmentClass = ListFragment.class;
+        Class fragmentClass = FavoriteLocationNames.class;
 
         int id = item.getItemId();
         if (id == R.id.nav_map) {
             fragmentClass = SupportMapFragment.class;
         } else if (id == R.id.nav_my_favorites) {
-            fragmentClass = ListFragment.class;
+            FavoriteLocationNames listFrag = new FavoriteLocationNames();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frgagment_container, listFrag).commit();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            setTitle(item.getTitle());
+            return true;
+
         } else if (id == R.id.nav_partners_visited) {
-            fragmentClass = ListFragment.class;
+            fragmentClass = FavoriteLocationNames.class;
         } else if (id == R.id.nav_settings) {
-            fragmentClass = ListFragment.class;
+            fragmentClass = FavoriteLocationNames.class;
         } else if (id == R.id.nav_edit_partner) {
-            fragmentClass = ListFragment.class;
+            fragmentClass = FavoriteLocationNames.class;
         }
 
         try {
@@ -122,6 +129,7 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        setTitle(item.getTitle());
         return true;
     }
 
