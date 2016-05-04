@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;git
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class MyFavoriteLocationsList extends Fragment {
+public class MyFavoriteLocationsList extends AppCompatActivity {
 
     private List<FavoriteLocation> list;
 
@@ -57,11 +57,23 @@ public class MyFavoriteLocationsList extends Fragment {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_favorite_locations_list);
+        FrameLayout frame = new FrameLayout(this);
+        frame.setId(CONTENT_VIEW_ID);
+        setContentView(frame, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
 
+        if (savedInstanceState == null) {
+            Fragment newFragment = new MapActivity.MapFragment();
+            android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.add(CONTENT_VIEW_ID, newFragment).commit();
+        }
 
-        ListAdapter adapter = new ArrayAdapter<FavoriteLocation>(this, android.R.layout.simple_list_item_1,
-                createArray());
+        //ListAdapter adapter = new ArrayAdapter<FavoriteLocation>(this, android.R.layout.simple_list_item_1,
+             //   createArray());
+
+        String [] str = {"aren", "kyle"};
+        ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,
+                str);
 
         ListView theListView = (ListView) findViewById(R.id.myFavoriteLocationsList);
         theListView.setAdapter(adapter);
@@ -73,13 +85,22 @@ public class MyFavoriteLocationsList extends Fragment {
             }
         });
 
+        // Begin the transaction
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        // Replace the contents of the container with the new fragment
+        ft.replace(R.id.your_placeholder, new android.support.v4.app.ListFragment());
+        // or ft.add(R.id.your_placeholder, new FooFragment());
+        // Complete the changes added above
+        ft.commit();
 
     }
 
-    @Override
-    protected void onActivityCreated(Bundle savedInstanceState){
+    public static class ListFragment extends Fragment{
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+            // Defines the xml file for the fragment
+            return inflater.inflate(R.layout.content_my_favorite_locations_list, parent, false);
+        }
 
     }
-
-
 }
