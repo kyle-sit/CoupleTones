@@ -28,7 +28,8 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState)
+    {
         super.onActivityCreated(savedInstanceState);
 
         ArrayAdapter<FavoriteLocation> adapter = new ArrayAdapter<FavoriteLocation>(getActivity(),
