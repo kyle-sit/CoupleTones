@@ -1,5 +1,6 @@
 package com.team4.cse110.coupletones;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
+        setTitle("Couple Tones");
         drawer.setDrawerListener(toggle);
 
         toggle.syncState();
@@ -95,26 +96,30 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         Fragment fragment = null;
-        Class fragmentClass = FavoriteLocationNames.class;
+        Class fragmentClass = FavoriteLocationFragment.class;
 
         int id = item.getItemId();
         if (id == R.id.nav_map) {
-            fragmentClass = SupportMapFragment.class;
+            // comment these two lines out when you want to try with a fragment
+            startActivity(new Intent(getBaseContext(), MapActivity.class));
+            return true;
+            // uncomment this next line when testing with map fragment
+            // fragmentClass = MapActivity.class
         } else if (id == R.id.nav_my_favorites) {
-            FavoriteLocationNames listFrag = new FavoriteLocationNames();
+            FavoriteLocationFragment listFrag = new FavoriteLocationFragment();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frgagment_container, listFrag).commit();
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, listFrag).commit();
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
             setTitle(item.getTitle());
             return true;
 
         } else if (id == R.id.nav_partners_visited) {
-            fragmentClass = FavoriteLocationNames.class;
+            fragmentClass = FavoriteLocationFragment.class;
         } else if (id == R.id.nav_settings) {
-            fragmentClass = FavoriteLocationNames.class;
+            fragmentClass = FavoriteLocationFragment.class;
         } else if (id == R.id.nav_edit_partner) {
-            fragmentClass = FavoriteLocationNames.class;
+            fragmentClass = FavoriteLocationFragment.class;
         }
 
         try {

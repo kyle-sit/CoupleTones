@@ -13,7 +13,7 @@ import android.widget.ListView;
 /**
  * Created by Kyle on 5/4/16.
  */
-public class FavoriteLocationNames extends ListFragment {
+public class FavoriteLocationFragment extends ListFragment {
     int currSelected = 0;
 
     @Override
