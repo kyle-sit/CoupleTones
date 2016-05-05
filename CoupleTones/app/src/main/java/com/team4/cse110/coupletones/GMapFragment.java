@@ -35,7 +35,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class GMapFragment extends Fragment implements OnMapReadyCallback
+public class GMapFragment extends Fragment implements OnMapReadyCallback, FavoriteLocationsList
 {
 
     private static GoogleMap mMap;
@@ -72,6 +72,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
+        restoreMarkers();
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
         if (mMap == null)
@@ -132,8 +133,9 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback
     private void createMarker(final LatLng latLng)
     {
         AlertDialog.Builder buildDialog = new AlertDialog.Builder(context);
-        buildDialog.setTitle("Name your Favorite Location");
+        buildDialog.setTitle("Add a Favorite Location");
         final EditText userInput = new EditText(context);
+        userInput.setHint("Name of location");
 
         userInput.setInputType(InputType.TYPE_CLASS_TEXT);
         buildDialog.setView(userInput);
@@ -144,9 +146,13 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback
             public void onClick(DialogInterface dialog, int which)
             {
                 String markerTitle = userInput.getText().toString();
+                if (markerTitle.isEmpty())
+                {
+                    return;
+                }
 
                 Marker tempMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
-                //FavoriteLocation tempFav = new FavoriteLocation(tempMarker);
+                addLocation(new FavoriteLocation(tempMarker));
 
             }
         });
@@ -161,6 +167,31 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback
         });
 
         buildDialog.show();
+
+    }
+
+    private void restoreMarkers()
+    {
+        if (mMap != null)
+        {
+            for (FavoriteLocation favLoc : list) {
+                mMap.addMarker(favLoc.getMarkerOptions());
+            }
+        }
+    }
+
+    @Override
+    public void addLocation(FavoriteLocation favoriteLocation) {
+        list.add(0,favoriteLocation);
+    }
+
+    @Override
+    public void deleteLocation(FavoriteLocation favoriteLocation) {
+
+    }
+
+    @Override
+    public void editLocation(FavoriteLocation favoriteLocation) {
 
     }
 }

@@ -7,37 +7,15 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Kyle on 5/4/16.
- */
-public class FavoriteLocationsList {
 
-    private List<FavoriteLocation> list;
+public interface FavoriteLocationsList {
 
-    public FavoriteLocationsList() {
+    List<FavoriteLocation> list = new ArrayList<FavoriteLocation>();
 
-        list = new ArrayList<FavoriteLocation>();
-    }
+    void addLocation(FavoriteLocation favoriteLocation);
 
-    public void addLocation(FavoriteLocation favoriteLocation) {
-        list.add(0, favoriteLocation);
-    }
+    void deleteLocation(FavoriteLocation favoriteLocation);
 
-    private void deleteLocation(FavoriteLocation favoriteLocation)
-    {
-        list.remove(favoriteLocation);
-    }
-
-    private void editLocation(FavoriteLocation favoriteLocation)
-    {
-        //AlertDialog.Builder buildDialog = new AlertDialog.Builder(this);
-        //buildDialog.setTitle("Rename your Favorite Location");
-        //final EditText userInput = new EditText(this);
-    }
-
-    public FavoriteLocation[] createArray()
-    {
-        return list.toArray(new FavoriteLocation[list.size()]);
-    }
+    void editLocation(FavoriteLocation favoriteLocation);
 
 }

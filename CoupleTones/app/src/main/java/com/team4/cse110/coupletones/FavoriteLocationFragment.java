@@ -8,12 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
-/**
- * Created by Kyle on 5/4/16.
- */
-public class FavoriteLocationFragment extends ListFragment
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
+
+public class FavoriteLocationFragment extends ListFragment implements FavoriteLocationsList
 {
     int currSelected = 0;
 
@@ -27,29 +31,41 @@ public class FavoriteLocationFragment extends ListFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //FavoriteLocationsList array = new FavoriteLocationsList();
+        ArrayAdapter<FavoriteLocation> adapter = new ArrayAdapter<FavoriteLocation>(getActivity(),
+                android.R.layout.simple_list_item_activated_1, list);
+        setListAdapter(adapter);
 
-        //ArrayAdapter<FavoriteLocation> connectArrayToList =
-                //new ArrayAdapter<FavoriteLocation>(getActivity(),
-                        //android.R.layout.simple_list_item_activated_1,
-                        //array.createArray());
-
-        String [] fake = {"aren", "kyle", "niral", "Aram", "loves", "beirut", "I ", "love", "cock", "isnt", "it", "great", "YEET", "hellll yeah", "who,", "me?"};
-
-        ArrayAdapter<String> connectArrayToList =
-                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_activated_1, fake);
-
-        setListAdapter(connectArrayToList);
-
-        if( savedInstanceState != null) {
+        if( savedInstanceState != null)
+        {
             currSelected = savedInstanceState.getInt("curChoice", 0);
         }
 
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 
+    public FavoriteLocation[] createArray()
+    {
+        return list.toArray(new FavoriteLocation[list.size()]);
+    }
+
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+
+    }
+
+    @Override
+    public void addLocation(FavoriteLocation favoriteLocation) {
+    }
+
+    @Override
+    public void deleteLocation(FavoriteLocation favoriteLocation)
+    {
+
+    }
+
+    @Override
+    public void editLocation(FavoriteLocation favoriteLocation)
+    {
 
     }
 }
