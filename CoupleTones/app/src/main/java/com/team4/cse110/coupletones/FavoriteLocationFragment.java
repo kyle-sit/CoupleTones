@@ -81,7 +81,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
                 }
 
                 favLoc.editName(markerTitle);
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged(); 
             }
         });
 
