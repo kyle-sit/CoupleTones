@@ -51,7 +51,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-    @Override 
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
