@@ -53,4 +53,9 @@ public class FavoriteLocation
         return title+"\n\t\t\t"+snippet;
     }
 
+    public String getTitle()
+    {
+        return title;
+    }
+
 }
