@@ -1,7 +1,9 @@
 package com.team4.cse110.coupletones;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,15 +23,12 @@ import android.view.MenuItem;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+{
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
     private GoogleApiClient client;
 
     @Override
@@ -46,7 +45,10 @@ public class MainActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         setTitle("Couple Tones");
-        drawer.setDrawerListener(toggle);
+        if (drawer != null)
+        {
+            drawer.setDrawerListener(toggle);
+        }
 
         toggle.syncState();
 
@@ -60,24 +62,33 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed()
+    {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        if (drawer != null)
+        {
+            if (drawer.isDrawerOpen(GravityCompat.START))
+            {
+                drawer.closeDrawer(GravityCompat.START);
+            }
+            else
+            {
+                super.onBackPressed();
+            }
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -91,60 +102,75 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item)
+    {
+
         // Handle navigation view item clicks here.
         Fragment fragment = null;
         Class fragmentClass = FavoriteLocationFragment.class;
 
         int id = item.getItemId();
-        if (id == R.id.nav_map) {
-            // comment these two lines out when you want to try with a fragment
-            startActivity(new Intent(getBaseContext(), MapActivity.class));
-            return true;
-            // uncomment this next line when testing with map fragment
-            // fragmentClass = MapActivity.class
-        } else if (id == R.id.nav_my_favorites) {
-            FavoriteLocationFragment listFrag = new FavoriteLocationFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fragment_container, listFrag).commit();
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
-            setTitle(item.getTitle());
-            return true;
 
-        } else if (id == R.id.nav_partners_visited) {
+        if (id == R.id.nav_map)
+        {
+            //fragmentClass = GMapFragment.class;
+            fragment = (Fragment) new GMapFragment();
+        }
+        else if (id == R.id.nav_my_favorites)
+        {
+            //note the direct initialization
+            fragment = (Fragment) new FavoriteLocationFragment();
+        }
+        else if (id == R.id.nav_partners_visited)
+        {
+            fragmentClass = GMapFragment.class;
+        }
+        else if (id == R.id.nav_settings)
+        {
             fragmentClass = FavoriteLocationFragment.class;
-        } else if (id == R.id.nav_settings) {
-            fragmentClass = FavoriteLocationFragment.class;
-        } else if (id == R.id.nav_edit_partner) {
+        }
+        else if (id == R.id.nav_edit_partner)
+        {
             fragmentClass = FavoriteLocationFragment.class;
         }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        try
+        {
+            if (fragment == null)
+            {
+                //is there another way of doing this instead of creating a newInstance everytime?
+                fragment = (Fragment) fragmentClass.newInstance();
+            }
+        }
+        catch (InstantiationException | IllegalAccessException e)
+        {
             e.printStackTrace();
         }
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        if (drawer != null)
+        {
+            drawer.closeDrawer(GravityCompat.START);
+        }
         setTitle(item.getTitle());
         return true;
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client.connect();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "Main Page", // TODO: Define a title for the content shown.
@@ -161,7 +187,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
-
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         Action viewAction = Action.newAction(

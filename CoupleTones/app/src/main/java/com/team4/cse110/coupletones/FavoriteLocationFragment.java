@@ -13,11 +13,13 @@ import android.widget.ListView;
 /**
  * Created by Kyle on 5/4/16.
  */
-public class FavoriteLocationFragment extends ListFragment {
+public class FavoriteLocationFragment extends ListFragment
+{
     int currSelected = 0;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         return inflater.inflate(R.layout.fragment_layout, container, false);
     }
 
@@ -35,9 +37,7 @@ public class FavoriteLocationFragment extends ListFragment {
         String [] fake = {"aren", "kyle", "niral", "Aram", "loves", "beirut", "I ", "love", "cock", "isnt", "it", "great", "YEET", "hellll yeah", "who,", "me?"};
 
         ArrayAdapter<String> connectArrayToList =
-                new ArrayAdapter<String>(getActivity(),
-                        android.R.layout.simple_list_item_activated_1,
-                        fake);
+                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_activated_1, fake);
 
         setListAdapter(connectArrayToList);
 
