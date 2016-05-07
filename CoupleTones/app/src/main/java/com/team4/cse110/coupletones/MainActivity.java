@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     protected static final String TAG = "MainActivity";
     private GoogleApiClient client;
-
+    private GeofencingRegister geofencingRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -78,7 +77,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             navigationView.setNavigationItemSelectedListener(this);
         }
-        buildGoogleApiClient();
+
+        geofencingRegister = new GeofencingRegister(this);
     }
 
     @Override
@@ -179,27 +179,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    protected synchronized void buildGoogleApiClient() {
-        /*client = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();*/
-    }
-
 
     @Override
     public void onStart()
     {
         super.onStart();
-        //client.connect();
     }
 
     @Override
     public void onStop()
     {
         super.onStop();
-        //client.disconnect();
     }
 
 }
