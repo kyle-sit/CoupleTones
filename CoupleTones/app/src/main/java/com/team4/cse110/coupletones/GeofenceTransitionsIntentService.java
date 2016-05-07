@@ -34,13 +34,15 @@ public class GeofenceTransitionsIntentService extends IntentService
      * This constructor is required, and calls the super IntentService(String)
      * constructor with the name for a worker thread.
      */
-    public GeofenceTransitionsIntentService() {
+    public GeofenceTransitionsIntentService()
+    {
         // Use the TAG to name the worker thread.
         super(TAG);
     }
 
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
 
         super.onCreate();
     }
@@ -83,7 +85,8 @@ public class GeofenceTransitionsIntentService extends IntentService
             // Send notification and log the transition details.
             sendNotification(geofenceTransitionDetails);
             Log.i(TAG, geofenceTransitionDetails);
-        } else
+        }
+        else
         {
             // Log the error.
             Log.e(TAG, getString(R.string.geofence_transition_invalid_type, geofenceTransition));
@@ -98,7 +101,8 @@ public class GeofenceTransitionsIntentService extends IntentService
      * @param triggeringGeofences   The geofence(s) triggered.
      * @return                      The transition details formatted as String.
      */
-    private String getGeofenceTransitionDetails(Context context, int geofenceTransition, List<Geofence> triggeringGeofences) {
+    private String getGeofenceTransitionDetails(Context context, int geofenceTransition, List<Geofence> triggeringGeofences)
+    {
 
         String geofenceTransitionString = getTransitionString(geofenceTransition);
 
@@ -178,7 +182,7 @@ public class GeofenceTransitionsIntentService extends IntentService
             return getString(R.string.geofence_transition_entered);
         }
         return getString(R.string.unknown_geofence_transition);
-        }
     }
 }
+
 

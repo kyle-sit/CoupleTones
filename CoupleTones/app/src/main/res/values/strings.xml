@@ -26,5 +26,6 @@
     <string name="unknown_geofence_transition">Unknown Transition</string>
 
     <string name="geofence_enter_trigger_notify">Near a Favorite Location of Yours</string>
+    <string name="not_connected">GoogleApiClient no yet connected. Try again.</string>
 
 </resources>

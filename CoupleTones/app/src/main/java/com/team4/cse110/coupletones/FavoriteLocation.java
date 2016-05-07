@@ -16,7 +16,6 @@ public class FavoriteLocation
     private String title;
     private LatLng location;
     private Date dateCreated;
-    private Geofence.Builder fence;
 
 
     public FavoriteLocation(Marker marker){
@@ -26,21 +25,15 @@ public class FavoriteLocation
         dateCreated = new Date();
         this.snippet = "created " + dateCreated.toString();
         setDescription(snippet);
-
-        fence = new Geofence.Builder()
-                .setRequestId(this.title)
-                .setCircularRegion(location.latitude, location.longitude, Constants.GEOFENCE_RADIUS_IN_METERS)
-                .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER);
     }
 
     public void editName(String name){
         marker.setTitle(name);
         this.title = name;
-        fence.setRequestId(this.title);
     }
 
-    private void setDescription(String description) {
+    private void setDescription(String description)
+    {
         this.snippet = description;
         marker.setSnippet(description);
     }
@@ -59,6 +52,11 @@ public class FavoriteLocation
     public String getTitle()
     {
         return title;
+    }
+
+    public LatLng getPosition()
+    {
+        return location;
     }
 
 }

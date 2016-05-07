@@ -14,7 +14,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -40,7 +42,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
     {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new ArrayAdapter<FavoriteLocation>(getActivity(), android.R.layout.simple_list_item_activated_1, list);
+        adapter = new ArrayAdapter<FavoriteLocation>(getActivity(), android.R.layout.simple_list_item_activated_1, favLoclist);
         setListAdapter(adapter);
 
         if( savedInstanceState != null)
@@ -53,7 +55,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
 
     public FavoriteLocation[] createArray()
     {
-        return list.toArray(new FavoriteLocation[list.size()]);
+        return favLoclist.toArray(new FavoriteLocation[favLoclist.size()]);
     }
 
     @Override
@@ -79,9 +81,8 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
                 {
                     return;
                 }
-
-                favLoc.editName(markerTitle);
-                adapter.notifyDataSetChanged(); 
+                Toast.makeText(getContext(), "Changed '" + favLoc.getTitle()+"' to '"+markerTitle, Toast.LENGTH_LONG).show();
+                editLocation(favLoc, markerTitle);
             }
         });
 
@@ -108,8 +109,14 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
     }
 
     @Override
-    public void editLocation(FavoriteLocation favoriteLocation)
+    public void editLocation(FavoriteLocation favoriteLocation, String newName)
     {
+        favoriteLocation.editName(newName);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void addGeoFence(Geofence geofence) {
 
     }
 }

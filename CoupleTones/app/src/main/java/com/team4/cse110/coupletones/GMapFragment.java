@@ -24,7 +24,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -133,9 +135,10 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     private void createMarker(final LatLng latLng)
     {
         AlertDialog.Builder buildDialog = new AlertDialog.Builder(context);
-        buildDialog.setTitle("Add a Favorite Location");
+        buildDialog.setTitle("Adding a Favorite Location...");
+        buildDialog.setMessage("Name your location\n");
         final EditText userInput = new EditText(context);
-        userInput.setHint("Name of location");
+        userInput.setHint("name");
 
         userInput.setInputType(InputType.TYPE_CLASS_TEXT);
         buildDialog.setView(userInput);
@@ -174,24 +177,48 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     {
         if (mMap != null)
         {
-            for (FavoriteLocation favLoc : list) {
+            for (FavoriteLocation favLoc : favLoclist) {
                 mMap.addMarker(favLoc.getMarkerOptions());
             }
         }
     }
 
     @Override
-    public void addLocation(FavoriteLocation favoriteLocation) {
-        list.add(0,favoriteLocation);
+    public void addLocation(FavoriteLocation favoriteLocation)
+    {
+        favLoclist.add(0,favoriteLocation);
+        addGeoFence(new Geofence.Builder()
+                .setRequestId(favoriteLocation.getTitle())
+                .setCircularRegion(
+                        favoriteLocation.getPosition().latitude,
+                        favoriteLocation.getPosition().longitude,
+                        Constants.GEOFENCE_RADIUS_IN_METERS)
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+                .build());
+        Toast.makeText(
+                getContext(),
+                "Successfully added '"+favoriteLocation.getTitle()+"'",
+                Toast.LENGTH_LONG)
+                .show();
     }
 
     @Override
-    public void deleteLocation(FavoriteLocation favoriteLocation) {
-
+    public void deleteLocation(FavoriteLocation favoriteLocation)
+    {
+        // empty body
     }
 
     @Override
-    public void editLocation(FavoriteLocation favoriteLocation) {
-
+    public void editLocation(FavoriteLocation favoriteLocation, String newName)
+    {
+        // empty body
     }
+
+    @Override
+    public void addGeoFence(Geofence geofence)
+    {
+        geofenceList.add(0, geofence);
+    }
+
 }
