@@ -4,23 +4,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_map"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Map" />
+            android:icon="@drawable/ic_add_location_black_24dp"
+            android:title="Add Favorite Location" />
         <item
             android:id="@+id/nav_my_favorites"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="My Favorites" />
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:title="My Favorite Locations" />
         <item
             android:id="@+id/nav_partners_visited"
             android:icon="@drawable/ic_menu_gallery"
             android:title="Partner's Visited" />
         <item
             android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_manage"
             android:title="Settings" />
         <item
             android:id="@+id/nav_edit_partner"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_person_add_black_24dp"
             android:title="Edit Partner" />
 
     </group>

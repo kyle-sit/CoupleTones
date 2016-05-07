@@ -37,21 +37,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
 
-public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        ResultCallback<Status>,
-        FavoriteLocationsList
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
 
     protected static final String TAG = "MainActivity";
     private GoogleApiClient client;
 
-    /**
-     * Used when requesting to add or remove geofences.
-     */
-    private PendingIntent mGeofencePendingIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -86,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements
         {
             navigationView.setNavigationItemSelectedListener(this);
         }
-        mGeofencePendingIntent = null;
         buildGoogleApiClient();
     }
 
@@ -189,137 +180,26 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     protected synchronized void buildGoogleApiClient() {
-        client = new GoogleApiClient.Builder(this)
+        /*client = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
-                .build();
+                .build();*/
     }
 
-    private GeofencingRequest getGeofencingRequest()
-    {
-        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-
-        // The INITIAL_TRIGGER_ENTER flag indicates that geofencing service should trigger a
-        // GEOFENCE_TRANSITION_ENTER notification when the geofence is added and if the device
-        // is already inside that geofence.
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-
-        // Add the geofences to be monitored by geofencing service.
-        builder.addGeofences(geofenceList);
-
-        // Return a GeofencingRequest.
-        return builder.build();
-    }
-
-    /**
-     * Adds geofences, which sets alerts to be notified when the device enters or exits one of the
-     * specified geofences. Handles the success or failure results returned by addGeofences().
-     */
-    public void addGeofences(View view)
-    {
-        if (!client.isConnected())
-        {
-            Toast.makeText(this, getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        try
-        {
-            LocationServices.GeofencingApi.addGeofences(
-                    client,
-                    getGeofencingRequest(),
-                    getGeofencePendingIntent()
-            ).setResultCallback(this); // Result processed in onResult().
-        }
-        catch (SecurityException securityException)
-        {
-            // Catch exception generated if the app does not use ACCESS_FINE_LOCATION permission.
-            logSecurityException(securityException);
-        }
-    }
-
-    /**
-     * Gets a PendingIntent to send with the request to add or remove Geofences. Location Services
-     * issues the Intent inside this PendingIntent whenever a geofence transition occurs for the
-     * current list of geofences.
-     *
-     * @return A PendingIntent for the IntentService that handles geofence transitions.
-     */
-    private PendingIntent getGeofencePendingIntent() {
-        // Reuse the PendingIntent if we already have it.
-        if (mGeofencePendingIntent != null) {
-            return mGeofencePendingIntent;
-        }
-        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when calling
-        // addGeofences() and removeGeofences().
-        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private void logSecurityException(SecurityException securityException) {
-        Log.e(TAG, "Invalid location permission. " +
-                "You need to use ACCESS_FINE_LOCATION with geofences", securityException);
-    }
 
     @Override
     public void onStart()
     {
         super.onStart();
-        client.connect();
+        //client.connect();
     }
 
     @Override
     public void onStop()
     {
         super.onStop();
-        client.disconnect();
+        //client.disconnect();
     }
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-
-        Log.i(TAG, "Connected to GoogleApiClient");
-    }
-
-    @Override
-    public void onConnectionSuspended(int cause) {
-        // The connection to Google Play services was lost for some reason.
-        Log.i(TAG, "Connection suspended");
-
-        // onConnected() will be called again automatically when the service reconnects
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult result) {
-        // Refer to the javadoc for ConnectionResult to see what error codes might be returned in
-        // onConnectionFailed.
-        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
-    }
-
-
-    @Override
-    public void onResult(@NonNull Status status) {
-
-    }
-
-    @Override
-    public void addLocation(FavoriteLocation favoriteLocation) {
-
-    }
-
-    @Override
-    public void deleteLocation(FavoriteLocation favoriteLocation) {
-
-    }
-
-    @Override
-    public void editLocation(FavoriteLocation favoriteLocation, String newName) {
-
-    }
-
-    @Override
-    public void addGeoFence(Geofence geofence) {
-
-    }
 }
