@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 
-
+/* This class is for implementing our FavoriteLocationsList as a fragment */
 public class FavoriteLocationFragment extends ListFragment implements FavoriteLocationsList
 {
     int currSelected = 0;
@@ -31,6 +31,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
         return inflater.inflate(R.layout.fragment_layout, container, false);
     }
 
+    /* setting the list adapter which takes in our FavoriteLocationList as displays it on our fragment */
     @Override
     public void onActivityCreated(Bundle savedInstanceState)
     {
@@ -47,24 +48,38 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
         getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 
+
+    /* converts our favLocList variable from our Interface into an array;
+     * the dilemma we had was the following: we needed to constantly add
+     * FavoriteLocations without restriction which means we must use a list of some sort
+     */
     public FavoriteLocation[] createArray()
     {
         return favLocList.toArray(new FavoriteLocation[favLocList.size()]);
     }
 
+
+    /* this method is called whenever the user clicks on the FavoriteLocation list; it brings up
+     * options to delete and edit the favoriteLocation */
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+
+        //get the item the user clicked on
         final FavoriteLocation favLoc = (FavoriteLocation) this.getListAdapter().getItem(position);
 
+        //creating a dialog prompting for user input
         AlertDialog.Builder buildDialog = new AlertDialog.Builder(context);
         buildDialog.setTitle("Rename this Favorite Location");
+
+        //giving the user an editText box to rename the favoriteLocation
         final EditText userInput = new EditText(context);
         userInput.setHint(favLoc.getTitle());
 
         userInput.setInputType(InputType.TYPE_CLASS_TEXT);
         buildDialog.setView(userInput);
 
+        //renaming the location
         buildDialog.setPositiveButton("Apply", new DialogInterface.OnClickListener()
         {
             @Override
@@ -76,6 +91,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
                     return;
                 }
 
+                //cannot have duplicate names
                 for (FavoriteLocation favoriteLocation: favLocList)
                 {
                     if (favoriteLocation.getTitle().equals(markerTitle))
@@ -89,6 +105,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
             }
         });
 
+        //cancelling option
         buildDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
         {
             @Override
@@ -98,6 +115,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
             }
         });
 
+        // delete this favorite location
         buildDialog.setNeutralButton("DELETE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -112,6 +130,9 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
     public void addLocation(FavoriteLocation favoriteLocation) {
     }
 
+    /*
+     * removing the favorite location
+     */
     @Override
     public void deleteLocation(FavoriteLocation favoriteLocation)
     {
@@ -125,13 +146,18 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
             Toast.makeText(context,
                     "Unsuccessful deletion of '"+favoriteLocation.getTitle()+"'", Toast.LENGTH_LONG).show();
         }
+
+        //notifying our list that our data has changed
         adapter.notifyDataSetChanged();
     }
 
+    // editing the name of our Location
     @Override
     public void editLocation(FavoriteLocation favoriteLocation, String newName)
     {
         favoriteLocation.editName(newName);
+
+        //notifying our list that our data has changed
         adapter.notifyDataSetChanged();
     }
 

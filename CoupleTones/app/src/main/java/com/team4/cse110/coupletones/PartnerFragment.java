@@ -20,9 +20,9 @@ import com.google.android.gms.nearby.messages.Strategy;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link UserInfoFragment.OnFragmentInteractionListener} interface
+ * {@link PartnerFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link UserInfoFragment#newInstance} factory method to
+ * Use the {@link PartnerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class PartnerFragment extends Fragment {
@@ -32,10 +32,6 @@ public class PartnerFragment extends Fragment {
     private static String partner_number;
 
     private OnFragmentInteractionListener mListener;
-
-    public PartnerFragment(){
-        // Required empty public constructor
-    }
 
     /**
      * Use this factory method to create a new instance of
@@ -59,6 +55,7 @@ public class PartnerFragment extends Fragment {
 
     }
 
+    //this method simply creates the buttons and edit text boxes for the user to enter their partner's info
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,13 +68,11 @@ public class PartnerFragment extends Fragment {
         final EditText numberEdit = (EditText) fragview.findViewById(R.id.partnerNumber);
 
 
-
         nameBtn.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         partner_name = nameEdit.getText().toString();
-                        System.out.println(partner_name);
                     }
                 }
         );
@@ -87,7 +82,6 @@ public class PartnerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         partner_number = numberEdit.getText().toString();
-                        System.out.println(partner_number);
                         sendSms();
                     }
                 }
@@ -136,6 +130,7 @@ public class PartnerFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    // this is the SMS notification of partnership
     protected void sendSms() {
         String number = partner_number;
         String userName = "";
@@ -153,7 +148,6 @@ public class PartnerFragment extends Fragment {
         SmsManager manager = SmsManager.getDefault();
 
         manager.sendTextMessage(number, null, message, null, null);
-        //Toast.makeText(getApplicationContext(), "send successfully", Toast.LENGTH_LONG).show();
     }
 
     protected static String getPartner_name()
@@ -163,6 +157,7 @@ public class PartnerFragment extends Fragment {
 
     protected static String getPartner_number()
     {
+
         return partner_number;
     }
 }

@@ -56,22 +56,27 @@ public class FavoriteLocation
         }
     }
 
+    /* returns marker options in order to recreate Marker */
     public MarkerOptions getMarkerOptions()
     {
         return new MarkerOptions().position(location).title(title).snippet(snippet);
     }
 
+    /* override toString() method in order to print out FavoriteLocations in list format */
     @Override
     public String toString()
     {
         return title+"\n\t\t\t"+snippet;
     }
 
+
+    /* getting the title/name of FavoriteLocation */
     public String getTitle()
     {
         return title;
     }
 
+    /* getting the LatLng position of the FavoriteLocation */
     public LatLng getPosition()
     {
         return location;

@@ -18,7 +18,10 @@ import android.view.MenuItem;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-
+/*
+ * This is our MainActivity class and app that is launched at the start of execution.
+ * It sets up our navigation bar and UI for other fragments
+ */
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         PartnerFragment.OnFragmentInteractionListener,
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //initialize all the necessary fragments
         mapFrag = new GMapFragment();
         userInfoFrag = new UserInfoFragment();
         partnerFrag = new PartnerFragment();
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    //this method deals with user's click on an item in the navigation bar
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
@@ -143,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements
             fragment = partnerFrag;
         }
 
-
+        //switch to appropriate fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

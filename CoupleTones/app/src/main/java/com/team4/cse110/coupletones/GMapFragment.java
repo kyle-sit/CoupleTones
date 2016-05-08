@@ -34,6 +34,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
+/*
+ * This class is the fragment that shows our Google Map. It deals with everything related to user
+ * input on a map.
+ */
 public class GMapFragment extends Fragment implements OnMapReadyCallback, FavoriteLocationsList
 {
 
@@ -41,6 +45,9 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     private Context context;
     private float zoomLevel = 15.0f;
 
+    /*
+     * citation for aid: http://developer.android.com/training/maps/index.html
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -49,6 +56,9 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
 
+    /*
+     * citation for aid: http://developer.android.com/training/maps/index.html
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
@@ -67,10 +77,16 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
         mapFragment.getMapAsync(this);
     }
 
+    /*
+     * this method defines the user's position on the map and listens for a map click in which case,
+     * we should create a marker
+     */
     @Override
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
+
+        //this method restores all the markers in our favoriteLocationList from our interface
         restoreMarkers();
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
@@ -78,7 +94,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
         {
             return;
         }
-        //getActivity() or context may not work
+        //checking permissions for getting location
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(context, Manifest.permission. ACCESS_COARSE_LOCATION) != PackageManager. PERMISSION_GRANTED)
         {
@@ -91,6 +107,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
 
+        // moves the camera for the map to the user's current location
         LocationListener locationListener = new LocationListener()
         {
             @Override
@@ -118,6 +135,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
         String locationProvider = LocationManager.GPS_PROVIDER;
         locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
 
+        // listens for a map click, in which case create a marker
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener()
         {
             @Override
@@ -129,17 +147,21 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
 
     }
 
+    // this method asks the user for a name to assign to the marker for a favorite location
     private void createMarker(final LatLng latLng)
     {
+        //prompt user for name
         AlertDialog.Builder buildDialog = new AlertDialog.Builder(context);
         buildDialog.setTitle("Adding a Favorite Location...");
         buildDialog.setMessage("Name your location\n");
+
         final EditText userInput = new EditText(context);
         userInput.setHint("name");
 
         userInput.setInputType(InputType.TYPE_CLASS_TEXT);
         buildDialog.setView(userInput);
 
+        //submitting the name
         buildDialog.setPositiveButton("Apply", new DialogInterface.OnClickListener()
         {
             @Override
@@ -151,6 +173,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
                     return;
                 }
 
+                //no duplicate names allowed
                 for (FavoriteLocation favoriteLocation: favLocList)
                 {
                     if (favoriteLocation.getTitle().equals(markerTitle))
@@ -159,6 +182,8 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
                         return;
                     }
                 }
+
+                //create the marker and add it to the map
                 Marker tempMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
                 addLocation(new FavoriteLocation(tempMarker));
 
@@ -180,6 +205,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
 
     private void restoreMarkers()
     {
+        // add all the markers to the map
         if (mMap != null)
         {
             for (FavoriteLocation favLoc : favLocList) {
@@ -188,10 +214,12 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
         }
     }
 
+    //adding location to our universal favorite locations list
     @Override
     public void addLocation(FavoriteLocation favoriteLocation)
     {
         favLocList.add(0,favoriteLocation);
+
         Toast.makeText(
                 getContext(),
                 "Successfully added '"+favoriteLocation.getTitle()+"'",

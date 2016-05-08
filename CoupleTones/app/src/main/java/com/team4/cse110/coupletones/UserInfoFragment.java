@@ -31,10 +31,6 @@ public class UserInfoFragment extends Fragment
 
     private OnFragmentInteractionListener mListener;
 
-    public UserInfoFragment() {
-        // Required empty public constructor
-    }
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -56,6 +52,8 @@ public class UserInfoFragment extends Fragment
 
     }
 
+    //this method simply creates the buttons and edit text boxes for the user to enter their info;
+    //it then stores it
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -21,10 +21,15 @@ import java.util.ArrayList;
 /**
  * Created by niralpathak on 5/7/16.
  */
+
+/*
+ * This class deals with sending notifications depending on our Geofence Trigger
+ */
 public class NotificationHandler extends Service implements
         FavoriteLocationsList,
         LocationListener
 {
+    //initialize our trigger
     private GeofenceTrigger geofenceTrigger;
     private LocationManager locationManager;
     private String locationProvider;
@@ -39,6 +44,7 @@ public class NotificationHandler extends Service implements
         locationManager = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
         locationProvider = LocationManager.GPS_PROVIDER;
 
+        //check for permissions before getting user's location
         if (ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
@@ -50,6 +56,7 @@ public class NotificationHandler extends Service implements
 
     }
 
+    // given ids that trigger a favorite location, send a text message to our partner
     protected void sendNotification(ArrayList<String> locationIds)
     {
         String number = PartnerFragment.getPartner_number();
@@ -57,6 +64,7 @@ public class NotificationHandler extends Service implements
         String local_name = UserInfoFragment.getName();
         String message = "Hello "+partner_name+", "+local_name+" has visited ";
 
+        //concatenating strings when necessary
         if (locationIds.size() == 1)
         {
             message += "the following location: "+locationIds.get(0);
@@ -73,7 +81,10 @@ public class NotificationHandler extends Service implements
 
         SmsManager manager = SmsManager.getDefault();
 
-        manager.sendTextMessage(number, null, message, null, null);
+        //do not send message if the partner's number isnt set up
+        if (number != null || !number.isEmpty()) {
+            manager.sendTextMessage(number, null, message, null, null);
+        }
     }
 
     @Nullable
@@ -90,21 +101,8 @@ public class NotificationHandler extends Service implements
         return START_STICKY;
     }
 
-    @Override
-    public void addLocation(FavoriteLocation favoriteLocation) {
 
-    }
-
-    @Override
-    public void deleteLocation(FavoriteLocation favoriteLocation) {
-
-    }
-
-    @Override
-    public void editLocation(FavoriteLocation favoriteLocation, String newName) {
-
-    }
-
+    //when the user's location changes, check if a geofence is triggered and send notification if so
     @Override
     public void onLocationChanged(Location location)
     {
@@ -126,6 +124,21 @@ public class NotificationHandler extends Service implements
 
     @Override
     public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void addLocation(FavoriteLocation favoriteLocation) {
+
+    }
+
+    @Override
+    public void deleteLocation(FavoriteLocation favoriteLocation) {
+
+    }
+
+    @Override
+    public void editLocation(FavoriteLocation favoriteLocation, String newName) {
 
     }
 }

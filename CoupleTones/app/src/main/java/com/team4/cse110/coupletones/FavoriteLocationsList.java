@@ -10,7 +10,10 @@ import com.google.android.gms.location.Geofence;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/*
+ * This is the interface that ties our entire project together; we have a list of our favoriteLocations
+ * that we can edit. This class is basically a mediator between all other classes
+ */
 public interface FavoriteLocationsList {
 
     List<FavoriteLocation> favLocList = new ArrayList<FavoriteLocation>();
