@@ -8,7 +8,7 @@ public final class Constants
     public Constants()
     {}
 
-    public static final String PACKAGE_NAME = "com.google.android.gms.location.Geofence";
+    public static final String PACKAGE_NAME = "com.team4.cse110.coupletones";
 
     public static final String SHARED_PREFERENCES_NAME = PACKAGE_NAME + ".SHARED_PREFERENCES_NAME";
 

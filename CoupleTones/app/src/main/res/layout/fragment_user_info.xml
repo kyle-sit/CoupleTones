@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.team4.cse110.coupletones.UserInfoFragment"
+    android:clickable="true">
+
+    <EditText
+        android:layout_width="148dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/userName"
+        android:layout_gravity="left|center_vertical"
+        android:hint="@string/name"
+        android:layout_marginTop="47dp"
+        android:layout_below="@+id/textView2"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="173dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/phoneNumber"
+        android:layout_gravity="right|center_vertical"
+        android:hint="Only Numbers (No spaces or hyphens)"
+        android:inputType="none"
+        android:layout_marginTop="84dp"
+        android:layout_below="@+id/nameButton"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="User Info"
+
+        android:textSize="50sp"
+        android:textColor="@color/abc_input_method_navigation_guard"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="43dp"
+        android:id="@+id/textView2" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter UserName"
+        android:id="@+id/nameButton"
+        android:layout_gravity="center_horizontal|bottom"
+        android:hint="Enter Name"
+        android:layout_below="@+id/userName"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Phone Number"
+        android:id="@+id/numberButton"
+        android:layout_below="@+id/phoneNumber"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

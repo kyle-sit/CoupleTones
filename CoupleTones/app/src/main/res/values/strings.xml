@@ -28,4 +28,8 @@
     <string name="geofence_enter_trigger_notify">Near a Favorite Location of Yours</string>
     <string name="not_connected">GoogleApiClient no yet connected. Try again.</string>
 
+    <string name="user_info">User Information</string>
+    <string name="name">Your Name</string>
+    <string name="user_information">User Information</string>
+
 </resources>

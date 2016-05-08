@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +18,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +25,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -155,6 +151,14 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
                     return;
                 }
 
+                for (FavoriteLocation favoriteLocation: favLocList)
+                {
+                    if (favoriteLocation.getTitle().equals(markerTitle))
+                    {
+                        Toast.makeText(getContext(), "Unsuccessful - '"+markerTitle+"' already exists.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
                 Marker tempMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
                 addLocation(new FavoriteLocation(tempMarker));
 
@@ -178,7 +182,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     {
         if (mMap != null)
         {
-            for (FavoriteLocation favLoc : favLoclist) {
+            for (FavoriteLocation favLoc : favLocList) {
                 mMap.addMarker(favLoc.getMarkerOptions());
             }
         }
@@ -187,16 +191,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     @Override
     public void addLocation(FavoriteLocation favoriteLocation)
     {
-        favLoclist.add(0,favoriteLocation);
-        addGeoFence(new Geofence.Builder()
-                .setRequestId(favoriteLocation.getTitle())
-                .setCircularRegion(
-                        favoriteLocation.getPosition().latitude,
-                        favoriteLocation.getPosition().longitude,
-                        Constants.GEOFENCE_RADIUS_IN_METERS)
-                .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
-                .build());
+        favLocList.add(0,favoriteLocation);
         Toast.makeText(
                 getContext(),
                 "Successfully added '"+favoriteLocation.getTitle()+"'",
@@ -216,10 +211,5 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
         // empty body
     }
 
-    @Override
-    public void addGeoFence(Geofence geofence)
-    {
-        geofenceList.add(0, geofence);
-    }
 
 }

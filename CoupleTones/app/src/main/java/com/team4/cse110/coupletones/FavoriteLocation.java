@@ -1,10 +1,8 @@
 package com.team4.cse110.coupletones;
 
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.util.Date;
 
 
@@ -17,6 +15,12 @@ public class FavoriteLocation
     private LatLng location;
     private Date dateCreated;
 
+    public FavoriteLocation()
+    {
+        title = "N/A";
+        location = new LatLng(0,0);
+        snippet = "N/A";
+    }
 
     public FavoriteLocation(Marker marker){
         this.title = marker.getTitle();

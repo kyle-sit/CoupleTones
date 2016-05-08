@@ -13,15 +13,12 @@ import java.util.List;
 
 public interface FavoriteLocationsList {
 
-    List<FavoriteLocation> favLoclist = new ArrayList<FavoriteLocation>();
-    List<Geofence> geofenceList = new ArrayList<Geofence>();
+    List<FavoriteLocation> favLocList = new ArrayList<FavoriteLocation>();
 
     void addLocation(FavoriteLocation favoriteLocation);
 
     void deleteLocation(FavoriteLocation favoriteLocation);
 
     void editLocation(FavoriteLocation favoriteLocation, String newName);
-
-    void addGeoFence(Geofence geofence);
 
 }

@@ -8,22 +8,13 @@ import android.view.View;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 
 public class FavoriteLocationFragment extends ListFragment implements FavoriteLocationsList
@@ -42,7 +33,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
     {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new ArrayAdapter<FavoriteLocation>(getActivity(), android.R.layout.simple_list_item_activated_1, favLoclist);
+        adapter = new ArrayAdapter<FavoriteLocation>(getActivity(), android.R.layout.simple_list_item_activated_1, favLocList);
         setListAdapter(adapter);
 
         if( savedInstanceState != null)
@@ -55,7 +46,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
 
     public FavoriteLocation[] createArray()
     {
-        return favLoclist.toArray(new FavoriteLocation[favLoclist.size()]);
+        return favLocList.toArray(new FavoriteLocation[favLocList.size()]);
     }
 
     @Override
@@ -81,7 +72,16 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
                 {
                     return;
                 }
-                Toast.makeText(getContext(), "Changed '" + favLoc.getTitle()+"' to '"+markerTitle, Toast.LENGTH_LONG).show();
+
+                for (FavoriteLocation favoriteLocation: favLocList)
+                {
+                    if (favoriteLocation.getTitle().equals(markerTitle))
+                    {
+                        Toast.makeText(getContext(), "Unsuccessful Edit. "+markerTitle+" already exists.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+                Toast.makeText(getContext(), "Changed '" + favLoc.getTitle()+"' to '"+markerTitle+"'", Toast.LENGTH_LONG).show();
                 editLocation(favLoc, markerTitle);
             }
         });
@@ -115,8 +115,4 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
         adapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void addGeoFence(Geofence geofence) {
-
-    }
 }

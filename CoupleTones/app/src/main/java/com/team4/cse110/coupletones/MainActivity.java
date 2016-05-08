@@ -1,20 +1,10 @@
 package com.team4.cse110.coupletones;
 
 import android.annotation.TargetApi;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.ListFragment;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,19 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
@@ -43,7 +23,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     protected static final String TAG = "MainActivity";
     private GoogleApiClient client;
-    private GeofencingRegister geofencingRegister;
+    private GMapFragment mapFrag;
+    private UserInfoFragment userInfoFrag;
+    private PartnerFragment partnerFrag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -54,14 +36,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mapFrag = new GMapFragment();
+        userInfoFrag = new UserInfoFragment();
+        partnerFrag = new PartnerFragment();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this,
-                drawer,
-                toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
         setTitle("CoupleTones");
         if (drawer != null)
@@ -78,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setNavigationItemSelectedListener(this);
         }
 
-        geofencingRegister = new GeofencingRegister(this);
+        buildClient();
     }
 
     @Override
@@ -126,8 +108,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
     {
-
-        // Handle navigation view item clicks here.
         Fragment fragment = null;
         Class fragmentClass = FavoriteLocationFragment.class;
 
@@ -135,41 +115,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_map)
         {
-            fragment = (Fragment) new GMapFragment();
+            fragment = mapFrag;
         }
         else if (id == R.id.nav_my_favorites)
         {
-            fragment = (Fragment) new FavoriteLocationFragment();
+            fragment = new FavoriteLocationFragment();
         }
-        else if (id == R.id.nav_partners_visited)
+        /*else if (id == R.id.nav_partners_visited)
         {
             fragmentClass = GMapFragment.class;
-        }
+        }*/
         else if (id == R.id.nav_settings)
         {
-            fragmentClass = FavoriteLocationFragment.class;
+            fragment = userInfoFrag;
         }
         else if (id == R.id.nav_edit_partner)
         {
-            fragmentClass = FavoriteLocationFragment.class;
-        }
-
-        try
-        {
-            if (fragment == null)
-            {
-                fragment = (Fragment) fragmentClass.newInstance();
-            }
-        }
-        catch (InstantiationException | IllegalAccessException e)
-        {
-            e.printStackTrace();
+            fragment = partnerFrag;
         }
 
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        
         if (drawer != null)
         {
             drawer.closeDrawer(GravityCompat.START);
@@ -179,17 +148,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-
+    private void buildClient()
+    {
+        client = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
     @Override
     public void onStart()
     {
         super.onStart();
+        client.connect();
     }
 
     @Override
     public void onStop()
     {
         super.onStop();
+        client.disconnect();
     }
 
 }
