@@ -13,60 +13,41 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
+import android.view.LayoutInflater;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 /**
  * Created by niralpathak on 5/7/16.
  */
-public class NotificationHandler extends Service implements FavoriteLocationsList {
+public class NotificationHandler extends Service implements
+        FavoriteLocationsList,
+        LocationListener
+{
     private GeofenceTrigger geofenceTrigger;
-    private LocationListener locationListener;
+    private LocationManager locationManager;
+    private String locationProvider;
+    private Context context;
 
-    public NotificationHandler()
+    public NotificationHandler(Context context)
     {
         geofenceTrigger = new GeofenceTrigger();
-        initializeLocationListener();
 
-    }
+        this.context = context;
 
-    private void initializeLocationListener() {
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location)
-            {
-                if (geofenceTrigger.isTriggered(location))
-                {
-                    sendNotification(geofenceTrigger.getTriggered(location));
-                }
-            }
+        locationManager = (LocationManager) this.context.getSystemService(Context.LOCATION_SERVICE);
+        locationProvider = LocationManager.GPS_PROVIDER;
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        String locationProvider = LocationManager.GPS_PROVIDER;
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if (ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
         {
+            Toast.makeText(this.context, "Fix Permissions for Location", Toast.LENGTH_LONG).show();
             return;
         }
 
-        locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
+
     }
 
     protected void sendNotification(ArrayList<String> locationIds)
@@ -85,7 +66,7 @@ public class NotificationHandler extends Service implements FavoriteLocationsLis
             String multipleIds = "";
             for (String id: locationIds)
             {
-                multipleIds += id+", ";
+                multipleIds += id+"\n";
             }
             message += "the following locations: "+ multipleIds;
         }
@@ -93,7 +74,6 @@ public class NotificationHandler extends Service implements FavoriteLocationsLis
         SmsManager manager = SmsManager.getDefault();
 
         manager.sendTextMessage(number, null, message, null, null);
-        //Toast.makeText(getApplicationContext(), "send successfully", Toast.LENGTH_LONG).show();
     }
 
     @Nullable
@@ -101,6 +81,13 @@ public class NotificationHandler extends Service implements FavoriteLocationsLis
     public IBinder onBind(Intent intent)
     {
         return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override
@@ -115,6 +102,30 @@ public class NotificationHandler extends Service implements FavoriteLocationsLis
 
     @Override
     public void editLocation(FavoriteLocation favoriteLocation, String newName) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location)
+    {
+        if (geofenceTrigger.isTriggered(location))
+        {
+            sendNotification(geofenceTrigger.getTriggered(location));
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
 
     }
 }

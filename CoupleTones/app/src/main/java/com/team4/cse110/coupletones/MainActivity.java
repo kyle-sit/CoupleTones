@@ -1,6 +1,7 @@
 package com.team4.cse110.coupletones;
 
 import android.annotation.TargetApi;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +19,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        PartnerFragment.OnFragmentInteractionListener,
+        UserInfoFragment.OnFragmentInteractionListener
 {
 
     protected static final String TAG = "MainActivity";
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GMapFragment mapFrag;
     private UserInfoFragment userInfoFrag;
     private PartnerFragment partnerFrag;
+    private NotificationHandler notificationHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -39,6 +44,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mapFrag = new GMapFragment();
         userInfoFrag = new UserInfoFragment();
         partnerFrag = new PartnerFragment();
+        notificationHandler = new NotificationHandler(getApplicationContext());
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, userInfoFrag).commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -168,4 +177,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         client.disconnect();
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

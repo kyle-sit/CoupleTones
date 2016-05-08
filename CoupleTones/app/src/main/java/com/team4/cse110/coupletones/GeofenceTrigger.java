@@ -29,7 +29,7 @@ public class GeofenceTrigger implements FavoriteLocationsList
             tempLocation.setLongitude(favoriteLocation.getPosition().longitude);
 
             //distanceTo returns meters
-            if (tempLocation.distanceTo(location) >= Constants.GEOFENCE_RADIUS_IN_METERS)
+            if (tempLocation.distanceTo(location) <= Constants.GEOFENCE_RADIUS_IN_METERS)
             {
                 triggeredLocations.add(favoriteLocation.getTitle());
             }
