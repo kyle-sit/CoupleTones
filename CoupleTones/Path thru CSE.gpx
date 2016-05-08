@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.1" creator="JustGoRide.co.uk - http://www.JustGoRide.co.uk" xmlns="http://www.topografix.com/GPX/1/1">
+  <metadata>
+    <name>Path thru CSE</name>
+    <desc />
+    <copyright author="">
+      <year>2010</year>
+    </copyright>
+    <bounds minlat="32.88152" minlon="-117.2349143" maxlat="32.88296144" maxlon="-117.2328" />
+  </metadata>
+  <trk>
+    <name>Path thru CSE</name>
+    <trkseg>
+      <trkpt lat="32.88296144" lon="-117.2349143">
+        <ele>106.117347717285</ele>
+      </trkpt>
+      <trkpt lat="32.88152" lon="-117.2328">
+        <ele>103.458145141602</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
