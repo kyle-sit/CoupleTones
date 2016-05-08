@@ -31,15 +31,20 @@ public class FavoriteLocation
         setDescription(snippet);
     }
 
-    public void editName(String name){
-        marker.setTitle(name);
+    public void editName(String name)
+    {
+        if (marker != null) {
+            marker.setTitle(name);
+        }
         this.title = name;
     }
 
     private void setDescription(String description)
     {
         this.snippet = description;
-        marker.setSnippet(description);
+        if (marker != null) {
+            marker.setSnippet(description);
+        }
     }
 
     public MarkerOptions getMarkerOptions()

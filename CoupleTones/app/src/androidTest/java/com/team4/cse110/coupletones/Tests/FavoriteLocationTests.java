@@ -23,12 +23,6 @@ public class FavoriteLocationTests extends TestCase
         assertNotNull(favoriteLocation);
     }
 
-    //fails because of memory address
-    public void test_MarkerOption(){
-        MarkerOptions marker = new MarkerOptions().position(new LatLng(0,0)).title("").snippet("");
-        assertEquals(marker,favoriteLocation.getMarkerOptions());
-    }
-
     /*
     testing the getPosition method we defined
      */
@@ -53,12 +47,13 @@ public class FavoriteLocationTests extends TestCase
         assertEquals("N/A",favoriteLocation.getTitle());
     }
 
-    /*this faild because marker.settitle was called first,
-      but we didnt initiallize because we dont initiallize
-      marker in drfault constructor
+    /*
+    testing null marker passing through
     */
-    public void test_SetTitle(){
+    public void test_SetTitle()
+    {
         favoriteLocation.editName("test");
+        System.err.println("title = "+favoriteLocation.getTitle());
         assertEquals("test",favoriteLocation.getTitle());
     }
 
