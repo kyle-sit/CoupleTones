@@ -1,6 +1,7 @@
 package com.team4.cse110.coupletones;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.ListFragment;
 import android.text.InputType;
@@ -21,10 +22,12 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
 {
     int currSelected = 0;
     private ArrayAdapter<FavoriteLocation> adapter;
+    Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        context = inflater.getContext();
         return inflater.inflate(R.layout.fragment_layout, container, false);
     }
 
@@ -54,9 +57,9 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
         super.onListItemClick(l, v, position, id);
         final FavoriteLocation favLoc = (FavoriteLocation) this.getListAdapter().getItem(position);
 
-        AlertDialog.Builder buildDialog = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder buildDialog = new AlertDialog.Builder(context);
         buildDialog.setTitle("Rename this Favorite Location");
-        final EditText userInput = new EditText(getContext());
+        final EditText userInput = new EditText(context);
         userInput.setHint(favLoc.getTitle());
 
         userInput.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -77,11 +80,11 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
                 {
                     if (favoriteLocation.getTitle().equals(markerTitle))
                     {
-                        Toast.makeText(getContext(), "Unsuccessful Edit. "+markerTitle+" already exists.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, "Unsuccessful Edit. "+markerTitle+" already exists.", Toast.LENGTH_LONG).show();
                         return;
                     }
                 }
-                Toast.makeText(getContext(), "Changed '" + favLoc.getTitle()+"' to '"+markerTitle+"'", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Changed '" + favLoc.getTitle()+"' to '"+markerTitle+"'", Toast.LENGTH_LONG).show();
                 editLocation(favLoc, markerTitle);
             }
         });
@@ -95,6 +98,13 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
             }
         });
 
+        buildDialog.setNeutralButton("DELETE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteLocation(favLoc);
+            }
+        });
+
         buildDialog.show();
     }
 
@@ -105,7 +115,17 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
     @Override
     public void deleteLocation(FavoriteLocation favoriteLocation)
     {
-
+        if (favLocList.remove(favoriteLocation))
+        {
+            Toast.makeText(context,
+                    "Successfully deleted '"+favoriteLocation.getTitle()+"'", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Toast.makeText(context,
+                    "Unsuccessful deletion of '"+favoriteLocation.getTitle()+"'", Toast.LENGTH_LONG).show();
+        }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
