@@ -130,10 +130,10 @@ public class MainActivity extends AppCompatActivity implements
         {
             fragment = new FavoriteLocationFragment();
         }
-        /*else if (id == R.id.nav_partners_visited)
+        else if (id == R.id.nav_partners_visited)
         {
-            fragmentClass = GMapFragment.class;
-        }*/
+            fragment = mapFrag;
+        }
         else if (id == R.id.nav_settings)
         {
             fragment = userInfoFrag;

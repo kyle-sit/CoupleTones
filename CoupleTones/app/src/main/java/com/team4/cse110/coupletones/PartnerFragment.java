@@ -77,7 +77,6 @@ public class PartnerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         partner_name = nameEdit.getText().toString();
-                        System.out.println(partner_name);
                     }
                 }
         );
@@ -87,7 +86,6 @@ public class PartnerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         partner_number = numberEdit.getText().toString();
-                        System.out.println(partner_number);
                         sendSms();
                     }
                 }
@@ -153,7 +151,6 @@ public class PartnerFragment extends Fragment {
         SmsManager manager = SmsManager.getDefault();
 
         manager.sendTextMessage(number, null, message, null, null);
-        //Toast.makeText(getApplicationContext(), "send successfully", Toast.LENGTH_LONG).show();
     }
 
     protected static String getPartner_name()

@@ -13,7 +13,7 @@
         <item
             android:id="@+id/nav_partners_visited"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Partner's Visited" />
+            android:title="Coming Soon!" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"

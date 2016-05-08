@@ -74,7 +74,6 @@ public class UserInfoFragment extends Fragment
                     @Override
                     public void onClick(View v) {
                         user_name = nameEdit.getText().toString();
-                        System.out.println(user_name);
                     }
                 }
         );
@@ -84,7 +83,6 @@ public class UserInfoFragment extends Fragment
                     @Override
                     public void onClick(View v) {
                         user_number = numberEdit.getText().toString();
-                        System.out.println(user_number);
                     }
                 }
         );

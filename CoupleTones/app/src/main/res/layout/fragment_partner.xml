@@ -34,7 +34,7 @@
         android:layout_height="50dp"
         android:text="Partner Information"
 
-        android:textSize="40sp"
+        android:textSize="35sp"
         android:textColor="@color/abc_input_method_navigation_guard"
         android:layout_gravity="center_horizontal|top"
         android:layout_alignParentTop="true"
@@ -42,6 +42,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="43dp"
         android:id="@+id/textView2"
+        android:paddingTop="10dp"
         android:gravity="center" />
 
     <Button
