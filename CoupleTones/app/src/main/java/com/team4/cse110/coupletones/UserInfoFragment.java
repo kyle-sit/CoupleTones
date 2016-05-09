@@ -1,6 +1,7 @@
 package com.team4.cse110.coupletones;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -27,7 +28,7 @@ public class UserInfoFragment extends Fragment
 {
 
     private static String user_name;
-    private String user_number;
+    private static String user_number;
 
     private OnFragmentInteractionListener mListener;
 
@@ -52,13 +53,21 @@ public class UserInfoFragment extends Fragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_name",0);
+        SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("user_number",0);
+        String name = sharedPreferences.getString("userName","");
+        String number = sharedPreferences1.getString("userNumber","");
+        setName(name);
+        setNumber(number);
+        System.out.println(name);
+        System.out.println(number);
         super.onCreate(savedInstanceState);
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
 
         View fragview = inflater.inflate(R.layout.fragment_user_info, container, false);
         Button nameBtn = (Button) fragview.findViewById(R.id.nameButton);
@@ -75,6 +84,11 @@ public class UserInfoFragment extends Fragment
                     public void onClick(View v) {
                         user_name = nameEdit.getText().toString();
                         System.out.println(user_name);
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_name",0);
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putString("userName",user_name);
+                        System.out.println(user_name);
+                        editor.apply();
                     }
                 }
         );
@@ -85,6 +99,11 @@ public class UserInfoFragment extends Fragment
                     public void onClick(View v) {
                         user_number = numberEdit.getText().toString();
                         System.out.println(user_number);
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_number",0);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("userNumber",user_number);
+                        System.out.println(user_number);
+                        editor.apply();
                     }
                 }
         );
@@ -134,4 +153,14 @@ public class UserInfoFragment extends Fragment
         String name = user_name;
         return name;
     }
+
+    protected void setName(String name){
+        this.user_name = name;
+    }
+
+    protected void setNumber(String number){
+        this.user_number = number;
+    }
+
+
 }
