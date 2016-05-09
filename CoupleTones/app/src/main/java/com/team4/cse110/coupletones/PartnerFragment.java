@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.drive.internal.StringListResponse;
 import com.google.android.gms.nearby.messages.Strategy;
@@ -73,6 +74,7 @@ public class PartnerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         partner_name = nameEdit.getText().toString();
+                        Toast.makeText(getContext(), "Successful", Toast.LENGTH_LONG);
                     }
                 }
         );
@@ -83,6 +85,7 @@ public class PartnerFragment extends Fragment {
                     public void onClick(View v) {
                         partner_number = numberEdit.getText().toString();
                         sendSms();
+                        Toast.makeText(getContext(), "Successful", Toast.LENGTH_LONG);
                     }
                 }
         );
