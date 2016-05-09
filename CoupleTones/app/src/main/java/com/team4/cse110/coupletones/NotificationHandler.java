@@ -82,7 +82,7 @@ public class NotificationHandler extends Service implements
         SmsManager manager = SmsManager.getDefault();
 
         //do not send message if the partner's number isnt set up
-        if (number != null || !number.isEmpty()) {
+        if (number != null && !number.isEmpty()) {
             manager.sendTextMessage(number, null, message, null, null);
         }
     }

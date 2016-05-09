@@ -1,6 +1,7 @@
 package com.team4.cse110.coupletones;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -52,6 +53,14 @@ public class PartnerFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("partner_name",0);
+        SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("partner_number",0);
+        String name = sharedPreferences.getString("partnerName","");
+        String number = sharedPreferences1.getString("partnerNumber","");
+        setName(name);
+        setNumber(number);
+        System.out.println(name);
+        System.out.println(number);
         super.onCreate(savedInstanceState);
 
     }
@@ -75,6 +84,12 @@ public class PartnerFragment extends Fragment {
                     public void onClick(View v) {
                         partner_name = nameEdit.getText().toString();
                         Toast.makeText(getContext(), "Successful Partner UserName Edit", Toast.LENGTH_LONG).show();
+
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("partner_name",0);
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+
+                        editor.putString("partnerName",partner_name);
+                        editor.apply();
                     }
                 }
         );
@@ -84,8 +99,15 @@ public class PartnerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         partner_number = numberEdit.getText().toString();
-                        sendSms();
                         Toast.makeText(getContext(), "Successful Partner Phone Number Edit", Toast.LENGTH_LONG).show();
+
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("partner_number",0);
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+
+                        editor.putString("partnerNumber",partner_number);
+                        editor.apply();
+
+                        sendSms();
                     }
                 }
         );
@@ -162,5 +184,13 @@ public class PartnerFragment extends Fragment {
     {
 
         return partner_number;
+    }
+
+    protected void setName(String name){
+        this.partner_name = name;
+    }
+
+    protected void setNumber(String number){
+        this.partner_number = number;
     }
 }

@@ -1,6 +1,7 @@
 package com.team4.cse110.coupletones;
 
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,10 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Scanner;
 
 /*
  * This is our MainActivity class and app that is launched at the start of execution.
@@ -25,7 +30,8 @@ import com.google.android.gms.location.LocationServices;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         PartnerFragment.OnFragmentInteractionListener,
-        UserInfoFragment.OnFragmentInteractionListener
+        UserInfoFragment.OnFragmentInteractionListener,
+        FavoriteLocationsList
 {
 
     protected static final String TAG = "MainActivity";
@@ -36,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements
     private NotificationHandler notificationHandler;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState) //Called by default when you open the app
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -65,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         toggle.syncState();
+
+        loadFromFile();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -169,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements
                 .build();
     }
     @Override
-    public void onStart()
+    public void onStart()   //Called by default at the beginning and collects client for locations services
     {
         super.onStart();
         client.connect();
@@ -183,7 +191,91 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onPause() {
+        saveToFile();
+        super.onPause();
+    }
+
+    //Save locations title, latitudes, longitudes and dates.
+    public void saveToFile()
+    {
+        String titles = "";
+        String latitudes = "";
+        String longitudes = "";
+        String dates = "";
+
+        //creating specialized strings using tabs as separators
+        for( FavoriteLocation favloc : favLocList )
+        {
+            titles += "\t" + favloc.getTitle();
+            latitudes += "\t" + favloc.getPosition().latitude;
+            longitudes += "\t" + favloc.getPosition().longitude;
+            dates += "\t" + favloc.getSnippet();
+        }
+
+        SharedPreferences sharedPreferences = getSharedPreferences( "locations_info", 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString("location_titles", titles);
+        editor.putString("location_latitudes", latitudes);
+        editor.putString("location_longitudes", longitudes);
+        editor.putString("location_dates", dates);
+        editor.apply();
+    }
+
+    //Load locations we saved
+    public void loadFromFile()
+    {
+        SharedPreferences sharedPreferences = getSharedPreferences("locations_info", 0);
+        String titles = sharedPreferences.getString("location_titles", "");
+        String latitudes = sharedPreferences.getString("location_latitudes", "");
+        String longitudes = sharedPreferences.getString("location_longitudes", "");
+        String dates = sharedPreferences.getString("location_dates", "");
+
+        // due to our specialized saveToFile, we implement our own delimiter for loading
+        if (titles != "")
+        {
+            Scanner scanner1 = new Scanner(titles).useDelimiter("\\s*\t\\s*");
+            Scanner scanner2 = new Scanner(latitudes).useDelimiter("\\s*\t\\s*");
+            Scanner scanner3 = new Scanner(longitudes).useDelimiter("\\s*\t\\s*");
+            Scanner scanner4 = new Scanner(dates).useDelimiter("\\s*\t\\s*");
+
+            String temp = null;
+            MarkerOptions markerOpt = new MarkerOptions();
+            LatLng latlng = null;
+            FavoriteLocation locationSaved = null;
+
+            while (scanner1.hasNext())
+            {
+                latlng = new LatLng(scanner2.nextFloat(), scanner3.nextFloat());
+                markerOpt.position(latlng);
+
+                markerOpt.title(scanner1.next());
+                locationSaved = new FavoriteLocation(markerOpt);
+                locationSaved.setDescription(scanner4.next());
+
+                favLocList.add(locationSaved);
+            }
+
+        }
+    }
+    @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void addLocation(FavoriteLocation favoriteLocation) {
+
+    }
+
+    @Override
+    public void deleteLocation(FavoriteLocation favoriteLocation) {
+
+    }
+
+    @Override
+    public void editLocation(FavoriteLocation favoriteLocation, String newName) {
 
     }
 }
