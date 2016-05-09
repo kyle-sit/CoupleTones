@@ -72,7 +72,7 @@ public class UserInfoFragment extends Fragment
                     @Override
                     public void onClick(View v) {
                         user_name = nameEdit.getText().toString();
-                        Toast.makeText(getContext(), "Successful", Toast.LENGTH_LONG);
+                        Toast.makeText(getContext(), "Successful UserName Edit", Toast.LENGTH_LONG).show();
                     }
                 }
         );
@@ -82,7 +82,7 @@ public class UserInfoFragment extends Fragment
                     @Override
                     public void onClick(View v) {
                         user_number = numberEdit.getText().toString();
-                        Toast.makeText(getContext(), "Successful", Toast.LENGTH_LONG);
+                        Toast.makeText(getContext(), "Successful Phone Number Edit", Toast.LENGTH_LONG).show();
                     }
                 }
         );

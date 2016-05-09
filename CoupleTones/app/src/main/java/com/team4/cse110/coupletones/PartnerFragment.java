@@ -74,7 +74,7 @@ public class PartnerFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         partner_name = nameEdit.getText().toString();
-                        Toast.makeText(getContext(), "Successful", Toast.LENGTH_LONG);
+                        Toast.makeText(getContext(), "Successful Partner UserName Edit", Toast.LENGTH_LONG).show();
                     }
                 }
         );
@@ -85,7 +85,7 @@ public class PartnerFragment extends Fragment {
                     public void onClick(View v) {
                         partner_number = numberEdit.getText().toString();
                         sendSms();
-                        Toast.makeText(getContext(), "Successful", Toast.LENGTH_LONG);
+                        Toast.makeText(getContext(), "Successful Partner Phone Number Edit", Toast.LENGTH_LONG).show();
                     }
                 }
         );
