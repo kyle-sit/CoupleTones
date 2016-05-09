@@ -52,7 +52,7 @@ public class UserInfoFragment extends Fragment
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) { //
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_name",0);
         SharedPreferences sharedPreferences1 = getActivity().getSharedPreferences("user_number",0);
         String name = sharedPreferences.getString("userName","");

@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements
     private NotificationHandler notificationHandler;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState) //Called by default when you open the app
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements
                 .build();
     }
     @Override
-    public void onStart()
+    public void onStart()   //Called by default at the beginning and collects client for locations services
     {
         super.onStart();
         client.connect();
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onPause();
     }
 
-    public void saveToFile(){
+    public void saveToFile(){ //Save locations title, latitudes, longitudes and dates.
         String titles = "";
         String latitudes = "";
         String longitudes = "";
@@ -209,13 +209,9 @@ public class MainActivity extends AppCompatActivity implements
         editor.putString("location_latitudes", latitudes);
         editor.putString("location_longitudes", longitudes);
         editor.putString("location_dates", dates);
-        System.out.println(titles);
-        System.out.println(latitudes);
-        System.out.println(longitudes);
-        System.out.println(dates);
         editor.apply();
     }
-    public void loadFromFile() {
+    public void loadFromFile() {  //Load locations we saved
         SharedPreferences sharedPreferences = getSharedPreferences("locations_info", 0);
         String titles = sharedPreferences.getString("location_titles", "");
         String latitudes = sharedPreferences.getString("location_latitudes", "");
@@ -233,14 +229,14 @@ public class MainActivity extends AppCompatActivity implements
             while (scanner1.hasNext()) {
                 latlng = new LatLng(scanner2.nextFloat(), scanner3.nextFloat());
                 markerOpt.position(latlng);
-                System.out.println(latlng);
+
                 markerOpt.title(scanner1.next());
                 locationSaved = new FavoriteLocation(markerOpt);
                 locationSaved.setDescription(scanner4.next());
-                System.out.println(locationSaved);
+
                 favLocList.add(locationSaved);
                 }
-            System.out.println(favLocList);
+
             }
     }
     @Override
