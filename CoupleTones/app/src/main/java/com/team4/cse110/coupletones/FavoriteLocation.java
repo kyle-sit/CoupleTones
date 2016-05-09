@@ -31,6 +31,14 @@ public class FavoriteLocation
         setDescription(snippet);
     }
 
+    public FavoriteLocation(MarkerOptions markerOptions)
+    {
+        this.title = markerOptions.getTitle();
+        this.marker = null;
+        this.location = markerOptions.getPosition();
+        this.snippet = markerOptions.getSnippet();
+    }
+
     public void editName(String name)
     {
         if (marker != null) {
@@ -39,7 +47,7 @@ public class FavoriteLocation
         this.title = name;
     }
 
-    private void setDescription(String description)
+    public void setDescription(String description)
     {
         this.snippet = description;
         if (marker != null) {
@@ -62,6 +70,10 @@ public class FavoriteLocation
     {
         return title;
     }
+
+    public Marker getMarker() {return marker;}
+
+    public String getSnippet() {return snippet;}
 
     public LatLng getPosition()
     {
