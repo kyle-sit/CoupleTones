@@ -30,7 +30,7 @@ public class GeofenceTrigger implements FavoriteLocationsList
 
     // this method returns an arraylist of strings of all the geofences triggered by the user's
     // current location
-    public ArrayList<String> getTriggered(Location location)
+    public ArrayList<String> getTriggered(Location currentLocation)
     {
         ArrayList<String> triggeredLocations = new ArrayList<String>();
 
@@ -42,9 +42,12 @@ public class GeofenceTrigger implements FavoriteLocationsList
             tempLocation.setLongitude(favoriteLocation.getPosition().longitude);
 
             //distanceTo returns meters
-            if (tempLocation.distanceTo(location) <= Constants.GEOFENCE_RADIUS_IN_METERS)
+            if (tempLocation.distanceTo(currentLocation) <= Constants.GEOFENCE_RADIUS_IN_METERS)
             {
-                triggeredLocations.add(favoriteLocation.getTitle());
+                if (favoriteLocation.timeDelayReq_met())
+                {
+                    triggeredLocations.add(favoriteLocation.getTitle());
+                }
             }
         }
 

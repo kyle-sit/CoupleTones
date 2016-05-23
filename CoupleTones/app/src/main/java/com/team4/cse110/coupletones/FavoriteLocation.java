@@ -18,6 +18,7 @@ public class FavoriteLocation
     private String title;
     private LatLng location;
     private Date dateCreated;
+    private Date lastVisited;
 
     /* default constructor */
     public FavoriteLocation()
@@ -76,8 +77,6 @@ public class FavoriteLocation
         return title+"\n\t\t\t"+snippet;
     }
 
-
-    /* getting the title/name of FavoriteLocation */
     public String getTitle()
     {
         return title;
@@ -90,6 +89,23 @@ public class FavoriteLocation
     public LatLng getPosition()
     {
         return location;
+    }
+
+    public void updateLastVisitedDate()
+    {
+        lastVisited = new Date();
+    }
+
+    public boolean timeDelayReq_met()
+    {
+        Date newDate = new Date();
+        long timeDiff = newDate.getTime() - lastVisited.getTime();
+        if (timeDiff > Constants.SPAM_TIME_DELAY)
+        {
+            updateLastVisitedDate();
+            return true;
+        }
+        return false;
     }
 
 }
