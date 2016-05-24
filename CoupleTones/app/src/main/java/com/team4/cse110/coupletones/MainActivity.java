@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements
         String dates = "";
 
         //creating specialized strings using tabs as separators
-        for( FavoriteLocation favloc : favLocList )
+        for( FavoriteLocation favloc : local_favLocList)
         {
             titles += "\t" + favloc.getTitle();
             latitudes += "\t" + favloc.getPosition().latitude;
@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity implements
                 locationSaved = new FavoriteLocation(markerOpt);
                 locationSaved.setDescription(scanner4.next());
 
-                favLocList.add(locationSaved);
+                local_favLocList.add(locationSaved);
             }
 
         }

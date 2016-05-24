@@ -15,8 +15,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.Geofence;
-
 /* This class is for implementing our FavoriteLocationsList as a fragment */
 public class FavoriteLocationFragment extends ListFragment implements FavoriteLocationsList
 {
@@ -37,7 +35,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
     {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new ArrayAdapter<FavoriteLocation>(getActivity(), android.R.layout.simple_list_item_activated_1, favLocList);
+        adapter = new ArrayAdapter<FavoriteLocation>(getActivity(), android.R.layout.simple_list_item_activated_1, local_favLocList);
         setListAdapter(adapter);
 
         if( savedInstanceState != null)
@@ -49,13 +47,13 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
     }
 
 
-    /* converts our favLocList variable from our Interface into an array;
+    /* converts our local_favLocList variable from our Interface into an array;
      * the dilemma we had was the following: we needed to constantly add
      * FavoriteLocations without restriction which means we must use a list of some sort
      */
     public FavoriteLocation[] createArray()
     {
-        return favLocList.toArray(new FavoriteLocation[favLocList.size()]);
+        return local_favLocList.toArray(new FavoriteLocation[local_favLocList.size()]);
     }
 
 
@@ -92,7 +90,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
                 }
 
                 //cannot have duplicate names
-                for (FavoriteLocation favoriteLocation: favLocList)
+                for (FavoriteLocation favoriteLocation: local_favLocList)
                 {
                     if (favoriteLocation.getTitle().equals(markerTitle))
                     {
@@ -136,7 +134,7 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
     @Override
     public void deleteLocation(FavoriteLocation favoriteLocation)
     {
-        if (favLocList.remove(favoriteLocation))
+        if (local_favLocList.remove(favoriteLocation))
         {
             Toast.makeText(context,
                     "Successfully deleted '"+favoriteLocation.getTitle()+"'", Toast.LENGTH_LONG).show();

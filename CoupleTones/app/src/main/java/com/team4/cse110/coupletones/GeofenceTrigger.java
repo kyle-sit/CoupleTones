@@ -21,32 +21,30 @@ public class GeofenceTrigger implements FavoriteLocationsList
 
     public boolean isTriggered(Location location)
     {
-        if (getTriggered(location).isEmpty())
-        {
-            return false;
-        }
+
         return true;
     }
 
-    // this method returns an arraylist of strings of all the geofences triggered by the user's
-    // current location
-    public ArrayList<String> getTriggered(Location currentLocation)
+
+    public ArrayList<String> getArrived(Location currentLocation)
     {
         ArrayList<String> triggeredLocations = new ArrayList<String>();
 
-        for (FavoriteLocation favoriteLocation: favLocList)
+        for (FavoriteLocation favoriteLocation: local_favLocList)
         {
             //creating a new location based on the user's location
             Location tempLocation = new Location("dummyProvider");
+
             tempLocation.setLatitude(favoriteLocation.getPosition().latitude);
             tempLocation.setLongitude(favoriteLocation.getPosition().longitude);
 
             //distanceTo returns meters
             if (tempLocation.distanceTo(currentLocation) <= Constants.GEOFENCE_RADIUS_IN_METERS)
             {
-                if (favoriteLocation.timeDelayReq_met())
+                if (!favoriteLocation.hasArrived())
                 {
                     triggeredLocations.add(favoriteLocation.getTitle());
+                    favoriteLocation.updateArrived();
                 }
             }
         }
@@ -54,6 +52,36 @@ public class GeofenceTrigger implements FavoriteLocationsList
         //return the arraylist of fences triggered
         return triggeredLocations;
     }
+
+    public ArrayList<String> getDeparted(Location currentLocation)
+    {
+        ArrayList<String> triggeredLocations = new ArrayList<String>();
+
+        for (FavoriteLocation favoriteLocation: local_favLocList)
+        {
+            //creating a new location based on the user's location
+            Location tempLocation = new Location("dummyProvider");
+
+            tempLocation.setLatitude(favoriteLocation.getPosition().latitude);
+            tempLocation.setLongitude(favoriteLocation.getPosition().longitude);
+
+            //distanceTo returns meters
+            if (favoriteLocation.hasArrived())
+            {
+                if (tempLocation.distanceTo(currentLocation) > Constants.GEOFENCE_RADIUS_IN_METERS)
+                {
+                    triggeredLocations.add(favoriteLocation.getTitle());
+                    favoriteLocation.updateArrived();
+                }
+            }
+        }
+
+        //return the arraylist of fences triggered
+        return triggeredLocations;
+    }
+
+
+
 
     @Override
     public void addLocation(FavoriteLocation favoriteLocation) {

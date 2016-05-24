@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface FavoriteLocationsList {
 
-    List<FavoriteLocation> favLocList = new ArrayList<FavoriteLocation>();
+    List<FavoriteLocation> local_favLocList = new ArrayList<FavoriteLocation>();
 
     void addLocation(FavoriteLocation favoriteLocation);
 

@@ -19,4 +19,5 @@ public final class Constants
     public static final float GEOFENCE_RADIUS_IN_METERS = 160.934f; // this is 1/10 mile
 
     public static final long SPAM_TIME_DELAY = 1800000; // this is 30 min in milliseconds
+
 }

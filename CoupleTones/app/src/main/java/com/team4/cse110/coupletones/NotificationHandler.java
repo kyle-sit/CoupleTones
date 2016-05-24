@@ -106,11 +106,16 @@ public class NotificationHandler extends Service implements
     @Override
     public void onLocationChanged(Location location)
     {
+        /*
         if (geofenceTrigger.isTriggered(location))
         {
             sendNotification(geofenceTrigger.getTriggered(location));
         }
+        */
+
+
     }
+
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {

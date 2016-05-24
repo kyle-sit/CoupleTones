@@ -18,7 +18,7 @@ public class FavoriteLocation
     private String title;
     private LatLng location;
     private Date dateCreated;
-    private Date lastVisited;
+    private boolean arrived;
 
     /* default constructor */
     public FavoriteLocation()
@@ -26,6 +26,7 @@ public class FavoriteLocation
         title = "N/A";
         location = new LatLng(0,0);
         snippet = "N/A";
+        arrived = false;
     }
 
     /* use member variables from the arg marker to construct a FavoriteLocation */
@@ -36,6 +37,7 @@ public class FavoriteLocation
         dateCreated = new Date();
         this.snippet = "created " + dateCreated.toString();
         setDescription(snippet);
+        arrived = false;
     }
 
     /* changes the name of the Favorite Location */
@@ -45,6 +47,7 @@ public class FavoriteLocation
         this.marker = null;
         this.location = markerOptions.getPosition();
         this.snippet = markerOptions.getSnippet();
+        this.arrived = false;
     }
 
     public void editName(String name)
@@ -82,30 +85,25 @@ public class FavoriteLocation
         return title;
     }
 
-    public Marker getMarker() {return marker;}
-
-    public String getSnippet() {return snippet;}
+    public String getSnippet()
+    {
+        return snippet;
+    }
 
     public LatLng getPosition()
     {
         return location;
     }
 
-    public void updateLastVisitedDate()
+    public void updateArrived()
     {
-        lastVisited = new Date();
+        arrived = !arrived;
     }
 
-    public boolean timeDelayReq_met()
+    public boolean hasArrived()
     {
-        Date newDate = new Date();
-        long timeDiff = newDate.getTime() - lastVisited.getTime();
-        if (timeDiff > Constants.SPAM_TIME_DELAY)
-        {
-            updateLastVisitedDate();
-            return true;
-        }
-        return false;
+        return arrived;
     }
+
 
 }

@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -174,7 +173,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
                 }
 
                 //no duplicate names allowed
-                for (FavoriteLocation favoriteLocation: favLocList)
+                for (FavoriteLocation favoriteLocation: local_favLocList)
                 {
                     if (favoriteLocation.getTitle().equals(markerTitle))
                     {
@@ -208,7 +207,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
         // add all the markers to the map
         if (mMap != null)
         {
-            for (FavoriteLocation favLoc : favLocList) {
+            for (FavoriteLocation favLoc : local_favLocList) {
                 mMap.addMarker(favLoc.getMarkerOptions());
             }
         }
@@ -218,7 +217,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     @Override
     public void addLocation(FavoriteLocation favoriteLocation)
     {
-        favLocList.add(0,favoriteLocation);
+        local_favLocList.add(0,favoriteLocation);
 
         Toast.makeText(
                 getContext(),
