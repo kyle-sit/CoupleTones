@@ -13,7 +13,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
-import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -106,14 +105,45 @@ public class NotificationHandler extends Service implements
     @Override
     public void onLocationChanged(Location location)
     {
-        /*
-        if (geofenceTrigger.isTriggered(location))
+        if (geofenceTrigger.isArrivedTriggered(location))
         {
-            sendNotification(geofenceTrigger.getTriggered(location));
+            arrival_sendNotification(geofenceTrigger.getArrivedLocations());
         }
-        */
+        if (geofenceTrigger.isDepartedTriggered(location))
+        {
+            departed_sendNotification(geofenceTrigger.getDepartedLocations());
+        }
+    }
 
+    protected void arrival_sendNotification(ArrayList<String> locationIds)
+    {
+        if (locationIds.isEmpty())
+        {
+            return;
+        }
 
+        String message = "Arrived at the following location(s): ";
+        for (String id: locationIds)
+        {
+            message += id + ",";
+        }
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+
+    }
+
+    protected void departed_sendNotification(ArrayList<String> locationIds)
+    {
+        if (locationIds.isEmpty())
+        {
+            return;
+        }
+
+        String message = "Departed the following location(s): ";
+        for (String id: locationIds)
+        {
+            message += id + ",";
+        }
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
 

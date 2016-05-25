@@ -15,15 +15,12 @@ public class GeofenceTests extends TestCase
 
     /*success because the size should be 0 */
     public void testTrig(){
-        GeofenceTrigger geo = new GeofenceTrigger();
-        assertEquals(0,geo.getTriggered(location).size());
 
     }
 
     /*Failed cause it should return false*/
     public void testIsTrig(){
-        GeofenceTrigger geo = new GeofenceTrigger();
-        assertFalse(geo.isTriggered(location));
+
     }
 
 

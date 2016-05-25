@@ -1,8 +1,10 @@
 package com.team4.cse110.coupletones;
 
 import android.location.Location;
+import android.widget.ListAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by niralpathak on 5/7/16.
@@ -16,17 +18,39 @@ import java.util.ArrayList;
  */
 public class GeofenceTrigger implements FavoriteLocationsList
 {
+    ArrayList<String> arrivedLocations;
+    ArrayList<String> departedLocations;
 
-    // this method returns a boolean value indicating whether the user's position has triggered
-
-    public boolean isTriggered(Location location)
+    public GeofenceTrigger()
     {
+        arrivedLocations = new ArrayList<String>();
+        departedLocations = new ArrayList<String>();
+    }
 
-        return true;
+    public boolean isArrivedTriggered(Location location)
+    {
+        arrivedLocations = updateArrived(location);
+        return (!arrivedLocations.isEmpty());
+    }
+
+    public boolean isDepartedTriggered(Location location)
+    {
+        departedLocations = updateDeparted(location);
+        return (!departedLocations.isEmpty());
+    }
+
+    public ArrayList<String> getArrivedLocations()
+    {
+        return arrivedLocations;
+    }
+
+    public ArrayList<String> getDepartedLocations()
+    {
+        return departedLocations;
     }
 
 
-    public ArrayList<String> getArrived(Location currentLocation)
+    private ArrayList<String> updateArrived(Location currentLocation)
     {
         ArrayList<String> triggeredLocations = new ArrayList<String>();
 
@@ -53,7 +77,7 @@ public class GeofenceTrigger implements FavoriteLocationsList
         return triggeredLocations;
     }
 
-    public ArrayList<String> getDeparted(Location currentLocation)
+    private ArrayList<String> updateDeparted(Location currentLocation)
     {
         ArrayList<String> triggeredLocations = new ArrayList<String>();
 
