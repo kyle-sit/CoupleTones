@@ -226,7 +226,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
 
     private void addLocation_firebase(FavoriteLocation favLoc)
     {
-        String firebaseUrl = Constants.FIREBASE_URL+UserInfoFragment.getName()+Constants.FAV_LOC_URL+favLoc.getTitle();
+        String firebaseUrl = Constants.FIREBASE_URL+SettingsFragment.getUser_name()+Constants.FAV_LOC_URL+favLoc.getTitle();
         Firebase fBase = new Firebase(firebaseUrl);
         fBase.setValue(favLoc);
     }

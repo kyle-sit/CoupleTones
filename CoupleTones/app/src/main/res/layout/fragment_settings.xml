@@ -1,0 +1,201 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    tools:context="com.team4.cse110.coupletones.SettingsFragment"
+    android:clickable="false">
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Your Information"
+        android:id="@+id/textView_YourInformation"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/hint_yourInformation"
+        android:id="@+id/textView_hintYourInfo"
+        android:layout_below="@+id/textView_YourInformation"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/username"
+        android:id="@+id/textView_username"
+        android:layout_below="@+id/textView_hintYourInfo"
+        android:layout_alignLeft="@+id/textView_hintYourInfo"
+        android:layout_alignStart="@+id/textView_hintYourInfo"
+        android:layout_marginTop="5dp"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        android:layout_alignBottom="@+id/editText_username"
+        android:gravity="center_vertical|center_horizontal" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editText_username"
+        android:layout_below="@+id/textView_hintYourInfo"
+        android:layout_toRightOf="@+id/textView_username"
+        android:layout_toEndOf="@+id/textView_username"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:hint="Enter Your Username" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editText_password"
+        android:hint="Enter Your Password"
+        android:layout_alignLeft="@+id/editText_username"
+        android:layout_alignStart="@+id/editText_username"
+        android:layout_below="@+id/editText_username" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Password:"
+        android:id="@+id/textView_password"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_alignTop="@+id/editText_password"
+        android:layout_alignBottom="@+id/editText_password"
+        android:layout_alignLeft="@+id/textView_username"
+        android:layout_alignStart="@+id/textView_username" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:id="@+id/button_loginUser"
+        android:layout_below="@+id/editText_password"
+        android:layout_alignLeft="@+id/textView_password"
+        android:layout_alignStart="@+id/textView_password" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Partner Information"
+        android:id="@+id/textView_PartnerInformation"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        android:layout_below="@+id/button_loginUser"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Enter Your Partner&apos;s Username (Optional)"
+        android:id="@+id/textView_hintPartnerInfo"
+        android:layout_below="@+id/textView_PartnerInformation"
+        android:layout_alignLeft="@+id/button_loginUser"
+        android:layout_alignStart="@+id/button_loginUser" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/username"
+        android:id="@+id/textView_username_partner"
+        android:textColor="#000000"
+        android:textSize="25sp"
+        android:layout_below="@+id/textView_hintPartnerInfo"
+        android:layout_marginTop="5sp"
+        android:gravity="center_vertical"
+        android:layout_alignLeft="@+id/textView_hintPartnerInfo"
+        android:layout_alignStart="@+id/textView_hintPartnerInfo" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editText_username_partner"
+        android:hint="Enter Partner&apos;s Username"
+        android:layout_below="@+id/textView_hintPartnerInfo"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update Partner"
+        android:id="@+id/button_updatePartner"
+        android:layout_below="@+id/editText_username_partner"
+        android:layout_alignLeft="@+id/textView_username_partner"
+        android:layout_alignStart="@+id/textView_username_partner" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forget Partner"
+        android:id="@+id/button_forgetPartner"
+        android:layout_alignBottom="@+id/button_updatePartner"
+        android:layout_alignRight="@+id/textView_hintPartnerInfo"
+        android:layout_alignEnd="@+id/textView_hintPartnerInfo" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="General"
+        android:id="@+id/textView_general"
+        android:textColor="#000000"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/button_updatePartner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notification Sounds"
+        android:id="@+id/switch_sounds"
+        android:typeface="normal"
+        android:layout_below="@+id/textView_general"
+        android:layout_alignLeft="@+id/button_updatePartner"
+        android:layout_alignStart="@+id/button_updatePartner"
+        android:textSize="25sp"
+        android:layout_alignRight="@+id/textView_PartnerInformation"
+        android:layout_alignEnd="@+id/textView_PartnerInformation" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Notification Vibration"
+        android:id="@+id/switch_vibration"
+        android:typeface="normal"
+        android:layout_below="@+id/switch_sounds"
+        android:layout_alignLeft="@+id/switch_sounds"
+        android:layout_alignStart="@+id/switch_sounds"
+        android:layout_marginTop="17sp"
+        android:textSize="25sp"
+        android:layout_alignRight="@+id/switch_sounds"
+        android:layout_alignEnd="@+id/switch_sounds" />
+</RelativeLayout>

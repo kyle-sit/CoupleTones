@@ -29,16 +29,14 @@ import java.util.Scanner;
  */
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        PartnerFragment.OnFragmentInteractionListener,
-        UserInfoFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnFragmentInteractionListener,
         FavoriteLocationsList
 {
 
     protected static final String TAG = "MainActivity";
     private GoogleApiClient client;
     private GMapFragment mapFrag;
-    private UserInfoFragment userInfoFrag;
-    private PartnerFragment partnerFrag;
+    private SettingsFragment settingsFragment;
     private NotificationHandler notificationHandler;
 
     @Override
@@ -52,12 +50,11 @@ public class MainActivity extends AppCompatActivity implements
 
         //initialize all the necessary fragments
         mapFrag = new GMapFragment();
-        userInfoFrag = new UserInfoFragment();
-        partnerFrag = new PartnerFragment();
+        settingsFragment = new SettingsFragment();
         notificationHandler = new NotificationHandler(getApplicationContext());
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.fragment_container, userInfoFrag).commit();
+        fragmentManager.beginTransaction().replace(R.id.fragment_container, settingsFragment).commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -130,8 +127,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(MenuItem item)
     {
-        Fragment fragment = null;
-        Class fragmentClass = FavoriteLocationFragment.class;
+        Fragment fragment = settingsFragment;
 
         int id = item.getItemId();
 
@@ -149,12 +145,9 @@ public class MainActivity extends AppCompatActivity implements
         }
         else if (id == R.id.nav_settings)
         {
-            fragment = userInfoFrag;
+            fragment = settingsFragment;
         }
-        else if (id == R.id.nav_edit_partner)
-        {
-            fragment = partnerFrag;
-        }
+
 
         //switch to appropriate fragment
         FragmentManager fragmentManager = getSupportFragmentManager();

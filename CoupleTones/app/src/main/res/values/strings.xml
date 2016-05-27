@@ -31,5 +31,7 @@
     <string name="user_info">User Information</string>
     <string name="name">Your Name</string>
     <string name="user_information">User Information</string>
+    <string name="hint_yourInformation">Create New Account/Use Existing Account</string>
+    <string name="username">Username:</string>
 
 </resources>
