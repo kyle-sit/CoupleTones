@@ -72,7 +72,7 @@ public class PartnerFragment extends Fragment {
 
         View fragview = inflater.inflate(R.layout.fragment_partner, container, false);
         Button nameBtn = (Button) fragview.findViewById(R.id.nameButton);
-        Button numBtn = (Button) fragview.findViewById(R.id.numberButton);
+        Button numberBtn = (Button) fragview.findViewById(R.id.numberButton);
 
         final EditText nameEdit = (EditText) fragview.findViewById(R.id.partnerName);
         final EditText numberEdit = (EditText) fragview.findViewById(R.id.partnerNumber);
@@ -94,7 +94,7 @@ public class PartnerFragment extends Fragment {
                 }
         );
 
-        numBtn.setOnClickListener(
+        numberBtn.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

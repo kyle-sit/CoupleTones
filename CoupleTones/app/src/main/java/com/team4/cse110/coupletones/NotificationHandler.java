@@ -12,10 +12,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.telephony.SmsManager;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
+
 import java.util.ArrayList;
+
 
 /**
  * Created by niralpathak on 5/7/16.
@@ -53,37 +55,8 @@ public class NotificationHandler extends Service implements
 
         locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
 
-    }
+        Firebase.setAndroidContext(context);
 
-    // given ids that trigger a favorite location, send a text message to our partner
-    protected void sendNotification(ArrayList<String> locationIds)
-    {
-        String number = PartnerFragment.getPartner_number();
-        String partner_name = PartnerFragment.getPartner_name();
-        String local_name = UserInfoFragment.getName();
-        String message = "Hello "+partner_name+", "+local_name+" has visited ";
-
-        //concatenating strings when necessary
-        if (locationIds.size() == 1)
-        {
-            message += "the following location: "+locationIds.get(0);
-        }
-        else
-        {
-            String multipleIds = "";
-            for (String id: locationIds)
-            {
-                multipleIds += id+"\n";
-            }
-            message += "the following locations: "+ multipleIds;
-        }
-
-        SmsManager manager = SmsManager.getDefault();
-
-        //do not send message if the partner's number isnt set up
-        if (number != null && !number.isEmpty()) {
-            manager.sendTextMessage(number, null, message, null, null);
-        }
     }
 
     @Nullable

@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -219,11 +220,15 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     {
         local_favLocList.add(0,favoriteLocation);
 
-        Toast.makeText(
-                getContext(),
-                "Successfully added '"+favoriteLocation.getTitle()+"'",
-                Toast.LENGTH_LONG)
-                .show();
+        Toast.makeText(getContext(), "Successfully added '"+favoriteLocation.getTitle()+"'", Toast.LENGTH_SHORT).show();
+        addLocation_firebase(favoriteLocation);
+    }
+
+    private void addLocation_firebase(FavoriteLocation favLoc)
+    {
+        String firebaseUrl = Constants.FIREBASE_URL+UserInfoFragment.getName()+Constants.FAV_LOC_URL+favLoc.getTitle();
+        Firebase fBase = new Firebase(firebaseUrl);
+        fBase.setValue(favLoc);
     }
 
     @Override

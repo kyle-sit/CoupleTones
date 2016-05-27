@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.firebase.client.Firebase;
 
 /* This class is for implementing our FavoriteLocationsList as a fragment */
 public class FavoriteLocationFragment extends ListFragment implements FavoriteLocationsList
@@ -99,7 +100,9 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
                     }
                 }
                 Toast.makeText(context, "Changed '" + favLoc.getTitle()+"' to '"+markerTitle+"'", Toast.LENGTH_LONG).show();
+                removeLocation_firebase(favLoc);
                 editLocation(favLoc, markerTitle);
+                addLocation_firebase(favLoc);
             }
         });
 
@@ -122,6 +125,20 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
         });
 
         buildDialog.show();
+    }
+
+    private void addLocation_firebase(FavoriteLocation favLoc)
+    {
+        String firebaseUrl = Constants.FIREBASE_URL+UserInfoFragment.getName()+Constants.FAV_LOC_URL+favLoc.getTitle();
+        Firebase fBase = new Firebase(firebaseUrl);
+        fBase.setValue(favLoc);
+    }
+
+    private void removeLocation_firebase(FavoriteLocation favLoc)
+    {
+        String firebaseUrl = Constants.FIREBASE_URL+UserInfoFragment.getName()+Constants.FAV_LOC_URL+favLoc.getTitle();
+        Firebase fBase = new Firebase(firebaseUrl);
+        fBase.removeValue();
     }
 
     @Override
