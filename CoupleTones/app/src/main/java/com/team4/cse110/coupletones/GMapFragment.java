@@ -24,7 +24,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,6 +48,8 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     private static GoogleMap mMap;
     private Context context;
     private float zoomLevel = 15.0f;
+    private int priorityCount = 0;
+
 
     /*
      * citation for aid: http://developer.android.com/training/maps/index.html
@@ -67,6 +73,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
 
         FragmentManager fm = getChildFragmentManager();
         SupportMapFragment mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+
         if (mapFragment == null) {
             mapFragment = new SupportMapFragment();
             FragmentTransaction ft = fm.beginTransaction();
@@ -86,8 +93,8 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     {
         mMap = googleMap;
 
-        //this method restores all the markers in our favoriteLocationList from our interface
         restoreMarkers();
+
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
         if (mMap == null)
@@ -203,12 +210,13 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
 
     }
 
-    private void restoreMarkers()
+    public void restoreMarkers()
     {
         // add all the markers to the map
         if (mMap != null)
         {
-            for (FavoriteLocation favLoc : local_favLocList) {
+            for (FavoriteLocation favLoc : local_favLocList)
+            {
                 mMap.addMarker(favLoc.getMarkerOptions());
             }
         }
@@ -218,17 +226,15 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     @Override
     public void addLocation(FavoriteLocation favoriteLocation)
     {
-        local_favLocList.add(0,favoriteLocation);
-
         Toast.makeText(getContext(), "Successfully added '"+favoriteLocation.getTitle()+"'", Toast.LENGTH_SHORT).show();
         addLocation_firebase(favoriteLocation);
     }
 
     private void addLocation_firebase(FavoriteLocation favLoc)
     {
-        String firebaseUrl = Constants.FIREBASE_URL+SettingsFragment.getUser_name()+Constants.FAV_LOC_URL+favLoc.getTitle();
+        String firebaseUrl = Constants.FIREBASE_URL+SettingsFragment.getUser_name()+Constants.FAV_LOC_URL;
         Firebase fBase = new Firebase(firebaseUrl);
-        fBase.setValue(favLoc);
+        fBase.child(favLoc.getTitle()).setValue(favLoc, priorityCount++);
     }
 
     @Override
@@ -242,6 +248,5 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     {
         // empty body
     }
-
 
 }

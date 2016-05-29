@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
@@ -15,9 +16,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.SettingsApi;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -37,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements
     private GoogleApiClient client;
     private GMapFragment mapFrag;
     private SettingsFragment settingsFragment;
+    private LocalFavoriteLocationFragment local_favLocFrag;
     private NotificationHandler notificationHandler;
 
     @Override
@@ -52,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements
         mapFrag = new GMapFragment();
         settingsFragment = new SettingsFragment();
         notificationHandler = new NotificationHandler(getApplicationContext());
+        local_favLocFrag = new LocalFavoriteLocationFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, settingsFragment).commit();
@@ -68,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         toggle.syncState();
-
-        loadFromFile();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -131,36 +139,40 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_map)
+        if (SettingsFragment.getLoggedIn())
         {
-            fragment = mapFrag;
+            setTitle(item.getTitle());
+
+            if (id == R.id.nav_map) {
+                fragment = mapFrag;
+            } else if (id == R.id.nav_my_favorites) {
+                mapFrag.restoreMarkers();
+                fragment = local_favLocFrag;
+            } else if (id == R.id.nav_partners_visited) {
+                fragment = mapFrag;
+            } else if (id == R.id.nav_settings) {
+                fragment = settingsFragment;
+            }
         }
-        else if (id == R.id.nav_my_favorites)
+        else
         {
-            fragment = new FavoriteLocationFragment();
-        }
-        else if (id == R.id.nav_partners_visited)
-        {
-            fragment = mapFrag;
-        }
-        else if (id == R.id.nav_settings)
-        {
-            fragment = settingsFragment;
+            Toast.makeText(this, "Please login", Toast.LENGTH_LONG).show();
+            setTitle("Settings");
         }
 
 
         //switch to appropriate fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         
         if (drawer != null)
         {
             drawer.closeDrawer(GravityCompat.START);
         }
-        setTitle(item.getTitle());
-        return true;
 
+        return true;
     }
 
     private void buildClient()
@@ -183,75 +195,8 @@ public class MainActivity extends AppCompatActivity implements
         client.disconnect();
     }
 
-    @Override
-    protected void onPause() {
-        saveToFile();
-        super.onPause();
-    }
 
-    //Save locations title, latitudes, longitudes and dates.
-    public void saveToFile()
-    {
-        String titles = "";
-        String latitudes = "";
-        String longitudes = "";
-        String dates = "";
 
-        //creating specialized strings using tabs as separators
-        for( FavoriteLocation favloc : local_favLocList)
-        {
-            titles += "\t" + favloc.getTitle();
-            latitudes += "\t" + favloc.getPosition().latitude;
-            longitudes += "\t" + favloc.getPosition().longitude;
-            dates += "\t" + favloc.getSnippet();
-        }
-
-        SharedPreferences sharedPreferences = getSharedPreferences( "locations_info", 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        editor.putString("location_titles", titles);
-        editor.putString("location_latitudes", latitudes);
-        editor.putString("location_longitudes", longitudes);
-        editor.putString("location_dates", dates);
-        editor.apply();
-    }
-
-    //Load locations we saved
-    public void loadFromFile()
-    {
-        SharedPreferences sharedPreferences = getSharedPreferences("locations_info", 0);
-        String titles = sharedPreferences.getString("location_titles", "");
-        String latitudes = sharedPreferences.getString("location_latitudes", "");
-        String longitudes = sharedPreferences.getString("location_longitudes", "");
-        String dates = sharedPreferences.getString("location_dates", "");
-
-        // due to our specialized saveToFile, we implement our own delimiter for loading
-        if (titles != "")
-        {
-            Scanner scanner1 = new Scanner(titles).useDelimiter("\\s*\t\\s*");
-            Scanner scanner2 = new Scanner(latitudes).useDelimiter("\\s*\t\\s*");
-            Scanner scanner3 = new Scanner(longitudes).useDelimiter("\\s*\t\\s*");
-            Scanner scanner4 = new Scanner(dates).useDelimiter("\\s*\t\\s*");
-
-            String temp = null;
-            MarkerOptions markerOpt = new MarkerOptions();
-            LatLng latlng = null;
-            FavoriteLocation locationSaved = null;
-
-            while (scanner1.hasNext())
-            {
-                latlng = new LatLng(scanner2.nextFloat(), scanner3.nextFloat());
-                markerOpt.position(latlng);
-
-                markerOpt.title(scanner1.next());
-                locationSaved = new FavoriteLocation(markerOpt);
-                locationSaved.setDescription(scanner4.next());
-
-                local_favLocList.add(locationSaved);
-            }
-
-        }
-    }
     @Override
     public void onFragmentInteraction(Uri uri) {
 

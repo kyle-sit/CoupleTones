@@ -46,8 +46,10 @@ public class NotificationHandler extends Service implements
         locationProvider = LocationManager.GPS_PROVIDER;
 
         //check for permissions before getting user's location
-        if (ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        if (ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this.context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED)
         {
             Toast.makeText(this.context, "Fix Permissions for Location", Toast.LENGTH_LONG).show();
             return;

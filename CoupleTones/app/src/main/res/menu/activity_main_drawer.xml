@@ -12,8 +12,8 @@
             android:title="My Favorite Locations" />
         <item
             android:id="@+id/nav_partners_visited"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Coming Soon!" />
+            android:icon="@drawable/ic_favorite_border_black_24dp"
+            android:title="Partner's Favorite Locations" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"

@@ -17,11 +17,12 @@ import android.widget.Toast;
 import com.firebase.client.Firebase;
 
 /* This class is for implementing our FavoriteLocationsList as a fragment */
-public class FavoriteLocationFragment extends ListFragment implements FavoriteLocationsList
+public class LocalFavoriteLocationFragment extends ListFragment implements FavoriteLocationsList
 {
     int currSelected = 0;
     private ArrayAdapter<FavoriteLocation> adapter;
     Context context;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -36,8 +37,12 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
     {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new ArrayAdapter<FavoriteLocation>(getActivity(), android.R.layout.simple_list_item_activated_1, local_favLocList);
+        Toast.makeText(context, "before: " + local_favLocList.size(), Toast.LENGTH_SHORT).show();
+        adapter = new ArrayAdapter<FavoriteLocation>(context, android.R.layout.simple_list_item_activated_1, local_favLocList);
         setListAdapter(adapter);
+        updateDataSet();
+        Toast.makeText(context, "after: " + local_favLocList.size(), Toast.LENGTH_SHORT).show();
+
 
         if( savedInstanceState != null)
         {
@@ -173,6 +178,11 @@ public class FavoriteLocationFragment extends ListFragment implements FavoriteLo
         favoriteLocation.editName(newName);
 
         //notifying our list that our data has changed
+        adapter.notifyDataSetChanged();
+    }
+
+    public void updateDataSet()
+    {
         adapter.notifyDataSetChanged();
     }
 

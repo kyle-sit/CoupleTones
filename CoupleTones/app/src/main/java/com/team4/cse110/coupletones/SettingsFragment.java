@@ -13,8 +13,15 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
 
-public class SettingsFragment extends Fragment
+
+public class SettingsFragment extends Fragment implements FavoriteLocationsList
 {
 
     private static String user_name;
@@ -23,8 +30,20 @@ public class SettingsFragment extends Fragment
     private static boolean loggedIn;
 
     private OnFragmentInteractionListener mListener;
+    private Button loginButton;
+    private Button partnerNameButton;
+    private Button deletePartnerButton;
+    private Switch soundSwitch;
+    private Switch vibrationSwitch;
+    private EditText usernameEdit;
+    private EditText passwordEdit;
+    private EditText partnerNameEdit;
 
-    public static SettingsFragment newInstance(String param1, String param2) {
+    private Firebase firebase_addLocalFavLoc;
+    private Query query_addLocalFavLoc;
+
+    public static SettingsFragment newInstance(String param1, String param2)
+    {
         SettingsFragment fragment = new SettingsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -45,16 +64,17 @@ public class SettingsFragment extends Fragment
 
         loggedIn = false;
 
-        Button loginButton = (Button) fragview.findViewById(R.id.button_loginUser);
-        Button partnerNameButton = (Button) fragview.findViewById(R.id.button_updatePartner);
-        Button deletePartnerButton = (Button) fragview.findViewById(R.id.button_forgetPartner);
+        loginButton = (Button) fragview.findViewById(R.id.button_loginUser);
+        partnerNameButton = (Button) fragview.findViewById(R.id.button_updatePartner);
+        deletePartnerButton = (Button) fragview.findViewById(R.id.button_forgetPartner);
 
-        Switch soundSwitch = (Switch) fragview.findViewById(R.id.switch_sounds);
-        Switch vibrationSwitch = (Switch) fragview.findViewById(R.id.switch_vibration);
+        soundSwitch = (Switch) fragview.findViewById(R.id.switch_sounds);
+        vibrationSwitch = (Switch) fragview.findViewById(R.id.switch_vibration);
 
-        final EditText usernameEdit = (EditText) fragview.findViewById(R.id.editText_username);
-        final EditText passwordEdit = (EditText) fragview.findViewById(R.id.editText_password);
-        final EditText partnerNameEdit = (EditText) fragview.findViewById(R.id.editText_username_partner);
+        usernameEdit = (EditText) fragview.findViewById(R.id.editText_username);
+        passwordEdit = (EditText) fragview.findViewById(R.id.editText_password);
+        partnerNameEdit = (EditText) fragview.findViewById(R.id.editText_username_partner);
+
 
         loginButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -63,13 +83,7 @@ public class SettingsFragment extends Fragment
                         user_name = usernameEdit.getText().toString();
                         user_password = passwordEdit.getText().toString();
 
-                        //Toast.makeText(getContext(), "Successful Partner UserName Edit", Toast.LENGTH_LONG).show();
-
-                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_name",0);
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
-                        editor.putString("userName",user_name);
-                        editor.putString("userPassword", user_password);
-                        editor.apply();
+                        checkCredentials(user_name, user_password);
                     }
                 }
         );
@@ -110,6 +124,50 @@ public class SettingsFragment extends Fragment
         return fragview;
     }
 
+    private void checkCredentials(final String user_name, final String user_password)
+    {
+        final Firebase fBase = new Firebase(Constants.FIREBASE_URL+user_name);
+        Query queryRef = fBase.orderByKey().equalTo("password");
+
+        queryRef.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot snapshot)
+            {
+                if (snapshot == null || snapshot.getValue() == null)
+                {
+                    Toast.makeText(getContext(), "Creating new user...", Toast.LENGTH_SHORT).show();
+                    loggedIn = true;
+
+                    fBase.child("password").setValue(user_password);
+                }
+                else
+                {
+                    DataSnapshot temp = snapshot.getChildren().iterator().next();
+                    String realPassword = temp.getValue().toString();
+
+                    if (realPassword.equals(user_password))
+                    {
+                        Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
+                        loggedIn = true;
+                        loadFromFirebase(user_name);
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(), "Incorrect Password. Try Again.", Toast.LENGTH_SHORT).show();
+                        loggedIn = false;
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError error) {
+            }
+        });
+
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -129,6 +187,21 @@ public class SettingsFragment extends Fragment
         mListener = null;
     }
 
+    @Override
+    public void addLocation(FavoriteLocation favoriteLocation) {
+
+    }
+
+    @Override
+    public void deleteLocation(FavoriteLocation favoriteLocation) {
+
+    }
+
+    @Override
+    public void editLocation(FavoriteLocation favoriteLocation, String newName) {
+
+    }
+
 
     public interface OnFragmentInteractionListener
     {
@@ -146,4 +219,52 @@ public class SettingsFragment extends Fragment
 
         return partner_name;
     }
+
+    public static boolean getLoggedIn()
+    {
+        return loggedIn;
+    }
+
+    //Load locations we saved
+    public void loadFromFirebase(String user_name)
+    {
+        firebase_addLocalFavLoc = new Firebase(Constants.FIREBASE_URL + user_name + Constants.FAV_LOC_URL);
+        query_addLocalFavLoc = firebase_addLocalFavLoc.orderByPriority();
+
+        query_addLocalFavLoc.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                FavoriteLocation favoriteLocation = dataSnapshot.getValue(FavoriteLocation.class);
+                double latitude = dataSnapshot.child("latitude").getValue(double.class);
+                double longitude = dataSnapshot.child("longitude").getValue(double.class);
+                String snippet = dataSnapshot.child("snippet").getValue(String.class);
+                String title = dataSnapshot.child("title").getValue(String.class);
+
+                local_favLocList.add(new FavoriteLocation(latitude,longitude,snippet,title));
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+    }
+
 }

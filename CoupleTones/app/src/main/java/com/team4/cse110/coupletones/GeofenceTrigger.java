@@ -59,8 +59,8 @@ public class GeofenceTrigger implements FavoriteLocationsList
             //creating a new location based on the user's location
             Location tempLocation = new Location("dummyProvider");
 
-            tempLocation.setLatitude(favoriteLocation.getPosition().latitude);
-            tempLocation.setLongitude(favoriteLocation.getPosition().longitude);
+            tempLocation.setLatitude(favoriteLocation.getLatitude());
+            tempLocation.setLongitude(favoriteLocation.getLongitude());
 
             //distanceTo returns meters
             if (tempLocation.distanceTo(currentLocation) <= Constants.GEOFENCE_RADIUS_IN_METERS)
@@ -86,8 +86,8 @@ public class GeofenceTrigger implements FavoriteLocationsList
             //creating a new location based on the user's location
             Location tempLocation = new Location("dummyProvider");
 
-            tempLocation.setLatitude(favoriteLocation.getPosition().latitude);
-            tempLocation.setLongitude(favoriteLocation.getPosition().longitude);
+            tempLocation.setLatitude(favoriteLocation.getLatitude());
+            tempLocation.setLongitude(favoriteLocation.getLongitude());
 
             //distanceTo returns meters
             if (favoriteLocation.hasArrived())

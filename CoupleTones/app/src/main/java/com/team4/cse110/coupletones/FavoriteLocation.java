@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /*
  *
@@ -12,21 +13,27 @@ import java.util.Date;
  */
 public class FavoriteLocation
 {
-
     private Marker marker;
     private String snippet;
     private String title;
     private LatLng location;
     private Date dateCreated;
     private boolean arrived;
+    private double latitude;
+    private double longitude;
+    private MarkerOptions markerOptions;
 
     /* default constructor */
     public FavoriteLocation()
     {
         title = "N/A";
-        location = new LatLng(0,0);
         snippet = "N/A";
         arrived = false;
+
+        latitude = 0;
+        longitude = 0;
+        location = new LatLng(latitude, longitude);
+        setMarkerOptions();
     }
 
     /* use member variables from the arg marker to construct a FavoriteLocation */
@@ -34,10 +41,15 @@ public class FavoriteLocation
         this.title = marker.getTitle();
         this.marker = marker;
         this.location = marker.getPosition();
-        dateCreated = new Date();
+        this.dateCreated = new Date();
         this.snippet = "created " + dateCreated.toString();
         setDescription(snippet);
         arrived = false;
+
+        this.latitude = location.latitude;
+        this.longitude = location.longitude;
+        setMarkerOptions();
+
     }
 
     /* changes the name of the Favorite Location */
@@ -48,6 +60,26 @@ public class FavoriteLocation
         this.location = markerOptions.getPosition();
         this.snippet = markerOptions.getSnippet();
         this.arrived = false;
+
+        this.latitude = location.latitude;
+        this.longitude = location.longitude;
+        setMarkerOptions();
+
+    }
+
+    public FavoriteLocation(double latitude, double longitude, String snippet, String title)
+    {
+        this.title = title;
+        this.snippet = snippet;
+        this.latitude = latitude;
+        this.longitude = longitude;
+
+        this.marker = null;
+        this.arrived = false;
+        this.dateCreated = null;
+
+        this.location = new LatLng(latitude, longitude);
+        setMarkerOptions();
     }
 
     public void editName(String name)
@@ -67,17 +99,27 @@ public class FavoriteLocation
         }
     }
 
+    @JsonIgnore
+    public void setMarkerOptions()
+    {
+        markerOptions = new MarkerOptions().position(location).title(title).snippet(snippet);
+    }
+
+
     /* returns marker options in order to recreate Marker */
+    @JsonIgnore
     public MarkerOptions getMarkerOptions()
     {
-        return new MarkerOptions().position(location).title(title).snippet(snippet);
+        setMarkerOptions();
+        return markerOptions;
     }
 
     /* override toString() method in order to print out FavoriteLocations in list format */
     @Override
     public String toString()
     {
-        return title+"\n\t\t\t"+snippet;
+
+        return title + "\n\t\t\t" + snippet;
     }
 
     public String getTitle()
@@ -85,23 +127,52 @@ public class FavoriteLocation
         return title;
     }
 
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    //keep for JSON creation
     public String getSnippet()
     {
         return snippet;
     }
 
-    public LatLng getPosition()
+    //keep for JSON creation
+    public void setSnippet(String snippet)
     {
-        return location;
+        this.snippet = snippet;
     }
 
-    public void updateArrived()
+    //keep for JSON creation
+    public double getLatitude()
     {
+        return latitude;
+    }
+
+    //keep for JSON creation
+    public void setLatitude(double latitude)
+    {
+        this.latitude = latitude;
+    }
+
+    //keep for JSON creation
+    public double getLongitude()
+    {
+        return longitude;
+    }
+
+    //keep for JSON creation
+    public void setLongitude(double longitude)
+    {
+        this.longitude = longitude;
+    }
+
+    public void updateArrived() {
         arrived = !arrived;
     }
 
-    public boolean hasArrived()
-    {
+    public boolean hasArrived() {
         return arrived;
     }
 
