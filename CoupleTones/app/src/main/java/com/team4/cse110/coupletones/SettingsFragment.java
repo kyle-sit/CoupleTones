@@ -20,6 +20,8 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
+import java.util.Set;
+
 
 public class SettingsFragment extends Fragment implements FavoriteLocationsList
 {
@@ -27,7 +29,7 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
     private static String user_name;
     private static String user_password;
     private static String partner_name;
-    private static boolean loggedIn;
+    private static boolean loggedIn = false;
 
     private OnFragmentInteractionListener mListener;
     private Button loginButton;
@@ -39,8 +41,87 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
     private EditText passwordEdit;
     private EditText partnerNameEdit;
 
-    private Firebase firebase_addLocalFavLoc;
-    private Query query_addLocalFavLoc;
+    private Firebase firebase_addLocalFavLoc_local;
+    private Query query_addLocalFavLoc_local;
+    private ChildEventListener childEventListener_local;
+
+    private Firebase firebase_addLocalFavLoc_partner;
+    private Query query_addLocalFavLoc_partner;
+    private ChildEventListener childEventListener_partner;
+
+    public SettingsFragment()
+    {
+        childEventListener_local = new ChildEventListener()
+        {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot != null) {
+                    FavoriteLocation favoriteLocation = dataSnapshot.getValue(FavoriteLocation.class);
+                    double latitude = dataSnapshot.child("latitude").getValue(double.class);
+                    double longitude = dataSnapshot.child("longitude").getValue(double.class);
+                    String snippet = dataSnapshot.child("snippet").getValue(String.class);
+                    String title = dataSnapshot.child("title").getValue(String.class);
+
+                    local_favLocList.add(new FavoriteLocation(latitude, longitude, snippet, title));
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        };
+
+        childEventListener_partner = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot != null) {
+                    FavoriteLocation favoriteLocation = dataSnapshot.getValue(FavoriteLocation.class);
+                    double latitude = dataSnapshot.child("latitude").getValue(double.class);
+                    double longitude = dataSnapshot.child("longitude").getValue(double.class);
+                    String snippet = dataSnapshot.child("snippet").getValue(String.class);
+                    String title = dataSnapshot.child("title").getValue(String.class);
+
+                    partner_favLocList.add(new FavoriteLocation(latitude, longitude, snippet, title));
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        };
+    }
 
     public static SettingsFragment newInstance(String param1, String param2)
     {
@@ -60,9 +141,7 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        View fragview = inflater.inflate(R.layout.fragment_settings, container, false);
-
-        loggedIn = false;
+        final View fragview = inflater.inflate(R.layout.fragment_settings, container, false);
 
         loginButton = (Button) fragview.findViewById(R.id.button_loginUser);
         partnerNameButton = (Button) fragview.findViewById(R.id.button_updatePartner);
@@ -88,25 +167,47 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
                 }
         );
 
-        partnerNameButton.setOnClickListener(
-                new View.OnClickListener() {
+        partnerNameButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        partner_name = partnerNameEdit.getText().toString();
+                    public void onClick(View v)
+                    {
+                        if (loggedIn)
+                        {
+                            partner_name = partnerNameEdit.getText().toString();
 
-                        Toast.makeText(getContext(), "Successful Partner UserName Edit", Toast.LENGTH_LONG).show();
+                            final Firebase fBase = new Firebase(Constants.FIREBASE_URL);
+                            Query query = fBase.orderByKey();
 
-                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("partner_name",0);
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot)
+                                {
+                                    if (dataSnapshot == null || !(dataSnapshot.child(partner_name).exists())) {
+                                        Toast.makeText(getContext(), "Invalid Partner", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        fBase.child(user_name).child("partner").setValue(partner_name);
+                                        fBase.child(partner_name).child("partner").setValue(user_name);
+                                        Toast.makeText(getContext(), "Successful Pairing with "+ partner_name, Toast.LENGTH_LONG).show();
 
-                        editor.putString("partnerName",partner_name);
-                        editor.apply();
+                                        loadFromFirebase_partner(partner_name);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
+
+                                }
+                            });
+                        }
+                        else
+                        {
+                            Toast.makeText(getContext(), "Please login prior to setting up a Partner", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
         );
 
-        deletePartnerButton.setOnClickListener(
-                new View.OnClickListener() {
+        deletePartnerButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         partner_name = "";
@@ -150,7 +251,7 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
                     {
                         Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
                         loggedIn = true;
-                        loadFromFirebase(user_name);
+                        loadFromFirebase_local(user_name);
                     }
                     else
                     {
@@ -226,44 +327,40 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
     }
 
     //Load locations we saved
-    public void loadFromFirebase(String user_name)
+    public void loadFromFirebase_local(String user_name)
     {
-        firebase_addLocalFavLoc = new Firebase(Constants.FIREBASE_URL + user_name + Constants.FAV_LOC_URL);
-        query_addLocalFavLoc = firebase_addLocalFavLoc.orderByPriority();
+        if (user_name.equals(""))
+        {
+            firebase_addLocalFavLoc_local = null;
+            query_addLocalFavLoc_local.removeEventListener(childEventListener_local);
+            query_addLocalFavLoc_local = null;
+        }
+        else
+        {
+            firebase_addLocalFavLoc_local = new Firebase(Constants.FIREBASE_URL + user_name + Constants.FAV_LOC_URL);
+            query_addLocalFavLoc_local = firebase_addLocalFavLoc_local.orderByPriority();
 
-        query_addLocalFavLoc.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s)
-            {
-                FavoriteLocation favoriteLocation = dataSnapshot.getValue(FavoriteLocation.class);
-                double latitude = dataSnapshot.child("latitude").getValue(double.class);
-                double longitude = dataSnapshot.child("longitude").getValue(double.class);
-                String snippet = dataSnapshot.child("snippet").getValue(String.class);
-                String title = dataSnapshot.child("title").getValue(String.class);
+            query_addLocalFavLoc_local.addChildEventListener(childEventListener_local);
+        }
 
-                local_favLocList.add(new FavoriteLocation(latitude,longitude,snippet,title));
-            }
+    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+    //Load locations we saved
+    public void loadFromFirebase_partner(String partner_name)
+    {
+        if (partner_name.equals(""))
+        {
+            firebase_addLocalFavLoc_partner = null;
+            query_addLocalFavLoc_local.removeEventListener(childEventListener_partner);
+            query_addLocalFavLoc_partner = null;
+        }
+        else
+        {
+            firebase_addLocalFavLoc_partner = new Firebase(Constants.FIREBASE_URL + partner_name + Constants.FAV_LOC_URL);
+            query_addLocalFavLoc_partner = firebase_addLocalFavLoc_partner.orderByPriority();
 
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
+            query_addLocalFavLoc_partner.addChildEventListener(childEventListener_partner);
+        }
 
     }
 
