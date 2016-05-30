@@ -121,6 +121,8 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
 
             }
         };
+
+        partner_name = "";
     }
 
     public static SettingsFragment newInstance(String param1, String param2)
@@ -182,9 +184,11 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot)
                                 {
-                                    if (dataSnapshot == null || !(dataSnapshot.child(partner_name).exists())) {
+                                    if (partner_name.equals("") || dataSnapshot == null || !(dataSnapshot.child(partner_name).exists()))
+                                    {
                                         Toast.makeText(getContext(), "Invalid Partner", Toast.LENGTH_SHORT).show();
-                                    } else {
+                                    } else
+                                    {
                                         fBase.child(user_name).child("partner").setValue(partner_name);
                                         fBase.child(partner_name).child("partner").setValue(user_name);
                                         Toast.makeText(getContext(), "Successful Pairing with "+ partner_name, Toast.LENGTH_LONG).show();
@@ -209,16 +213,24 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
 
         deletePartnerButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                        partner_name = "";
+                    public void onClick(View v)
+                    {
 
-                        Toast.makeText(getContext(), "Successful Partner UserName Edit", Toast.LENGTH_LONG).show();
+                        if (loggedIn)
+                        {
+                            Firebase firebase = new Firebase(Constants.FIREBASE_URL + user_name);
+                            firebase.child("partner").setValue("");
 
-                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("partner_name",0);
-                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                            firebase = new Firebase(Constants.FIREBASE_URL + partner_name);
+                            firebase.child("partner").setValue("");
 
-                        editor.putString("partnerName",partner_name);
-                        editor.apply();
+                            partner_name = "";
+                            Toast.makeText(getContext(), "Deleted Partner", Toast.LENGTH_LONG).show();
+
+                            loadFromFirebase_partner(partner_name);
+
+                        }
+
                     }
                 }
         );
@@ -252,6 +264,7 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
                         Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
                         loggedIn = true;
                         loadFromFirebase_local(user_name);
+                        updatePartnerName(user_name);
                     }
                     else
                     {
@@ -334,6 +347,9 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
             firebase_addLocalFavLoc_local = null;
             query_addLocalFavLoc_local.removeEventListener(childEventListener_local);
             query_addLocalFavLoc_local = null;
+
+            local_favLocList.clear();
+            loggedIn = false;
         }
         else
         {
@@ -353,14 +369,42 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
             firebase_addLocalFavLoc_partner = null;
             query_addLocalFavLoc_local.removeEventListener(childEventListener_partner);
             query_addLocalFavLoc_partner = null;
+
+            partner_favLocList.clear();
+
+            partnerNameEdit.setText("");
         }
         else
         {
             firebase_addLocalFavLoc_partner = new Firebase(Constants.FIREBASE_URL + partner_name + Constants.FAV_LOC_URL);
             query_addLocalFavLoc_partner = firebase_addLocalFavLoc_partner.orderByPriority();
-
             query_addLocalFavLoc_partner.addChildEventListener(childEventListener_partner);
+
+            partnerNameEdit.setText(partner_name);
         }
+
+    }
+
+    public void updatePartnerName(String user_name)
+    {
+        Firebase firebase = new Firebase(Constants.FIREBASE_URL+user_name);
+        Query query = firebase.orderByKey().equalTo("partner");
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null && dataSnapshot.child("partner").exists())
+                {
+                    partner_name = dataSnapshot.child("partner").getValue().toString();
+                    loadFromFirebase_partner(partner_name);
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
 
     }
 

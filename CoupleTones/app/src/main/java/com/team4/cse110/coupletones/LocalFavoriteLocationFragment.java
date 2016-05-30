@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.client.Firebase;
 
@@ -21,14 +22,19 @@ public class LocalFavoriteLocationFragment extends ListFragment implements Favor
 {
     int currSelected = 0;
     private ArrayAdapter<FavoriteLocation> adapter;
-    Context context;
+    private Context context;
+    private View view;
+    private TextView textView_noFavLocs;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         context = inflater.getContext();
-        return inflater.inflate(R.layout.fragment_layout, container, false);
+        view = inflater.inflate(R.layout.fragment_layout, container, false);
+        textView_noFavLocs = (TextView) view.findViewById(R.id.textView_noFavLocs);
+        textView_noFavLocs.setVisibility(View.INVISIBLE);
+        return view;
     }
 
     /* setting the list adapter which takes in our FavoriteLocationList as displays it on our fragment */
@@ -37,11 +43,9 @@ public class LocalFavoriteLocationFragment extends ListFragment implements Favor
     {
         super.onActivityCreated(savedInstanceState);
 
-        Toast.makeText(context, "before: " + local_favLocList.size(), Toast.LENGTH_SHORT).show();
         adapter = new ArrayAdapter<FavoriteLocation>(context, android.R.layout.simple_list_item_activated_1, local_favLocList);
         setListAdapter(adapter);
         updateDataSet();
-        Toast.makeText(context, "after: " + local_favLocList.size(), Toast.LENGTH_SHORT).show();
 
 
         if( savedInstanceState != null)
@@ -168,7 +172,7 @@ public class LocalFavoriteLocationFragment extends ListFragment implements Favor
         }
 
         //notifying our list that our data has changed
-        adapter.notifyDataSetChanged();
+        updateDataSet();
     }
 
     // editing the name of our Location
@@ -178,12 +182,17 @@ public class LocalFavoriteLocationFragment extends ListFragment implements Favor
         favoriteLocation.editName(newName);
 
         //notifying our list that our data has changed
-        adapter.notifyDataSetChanged();
+        updateDataSet();
     }
 
     public void updateDataSet()
     {
         adapter.notifyDataSetChanged();
+
+        if (local_favLocList.isEmpty())
+        {
+            textView_noFavLocs.setVisibility(View.VISIBLE);
+        }
     }
 
 }

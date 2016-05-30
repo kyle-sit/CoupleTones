@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements
     private GMapFragment mapFrag;
     private SettingsFragment settingsFragment;
     private LocalFavoriteLocationFragment local_favLocFrag;
+    private PartnerFavoriteLocationFragment partner_favLocFrag;
     private NotificationHandler notificationHandler;
 
     @Override
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements
         settingsFragment = new SettingsFragment();
         notificationHandler = new NotificationHandler(getApplicationContext());
         local_favLocFrag = new LocalFavoriteLocationFragment();
+        partner_favLocFrag = new PartnerFavoriteLocationFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragment_container, settingsFragment).commit();
@@ -148,6 +150,8 @@ public class MainActivity extends AppCompatActivity implements
             } else if (id == R.id.nav_my_favorites) {
                 mapFrag.restoreMarkers();
                 fragment = local_favLocFrag;
+            } else if (id == R.id.nav_partners_favorites){
+                fragment = partner_favLocFrag;
             } else if (id == R.id.nav_partners_visited) {
                 fragment = mapFrag;
             } else if (id == R.id.nav_settings) {
