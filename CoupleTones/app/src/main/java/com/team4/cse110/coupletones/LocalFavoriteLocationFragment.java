@@ -15,7 +15,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
+import com.firebase.client.ValueEventListener;
+import com.firebase.client.snapshot.IndexedNode;
 
 /* This class is for implementing our FavoriteLocationsList as a fragment */
 public class LocalFavoriteLocationFragment extends ListFragment implements FavoriteLocationsList
@@ -25,6 +31,7 @@ public class LocalFavoriteLocationFragment extends ListFragment implements Favor
     private Context context;
     private View view;
     private TextView textView_noFavLocs;
+    private int tempPriority;
 
 
     @Override
@@ -43,27 +50,21 @@ public class LocalFavoriteLocationFragment extends ListFragment implements Favor
     {
         super.onActivityCreated(savedInstanceState);
 
-        adapter = new ArrayAdapter<FavoriteLocation>(context, android.R.layout.simple_list_item_activated_1, local_favLocList);
-        setListAdapter(adapter);
-        updateDataSet();
-
+        initializeAdapter();
 
         if( savedInstanceState != null)
         {
             currSelected = savedInstanceState.getInt("curChoice", 0);
         }
 
-        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
     }
 
-
-    /* converts our local_favLocList variable from our Interface into an array;
-     * the dilemma we had was the following: we needed to constantly add
-     * FavoriteLocations without restriction which means we must use a list of some sort
-     */
-    public FavoriteLocation[] createArray()
-    {
-        return local_favLocList.toArray(new FavoriteLocation[local_favLocList.size()]);
+    private void initializeAdapter() {
+        adapter = new ArrayAdapter<FavoriteLocation>(context, android.R.layout.simple_list_item_activated_1, local_favLocList);
+        setListAdapter(adapter);
+        updateDataSet();
+        getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        tempPriority = 0;
     }
 
 
@@ -108,10 +109,17 @@ public class LocalFavoriteLocationFragment extends ListFragment implements Favor
                         return;
                     }
                 }
-                Toast.makeText(context, "Changed '" + favLoc.getTitle()+"' to '"+markerTitle+"'", Toast.LENGTH_LONG).show();
-                removeLocation_firebase(favLoc);
+                Toast.makeText(context, "Changed '" + favLoc.getTitle()+"' to '"+markerTitle+"'", Toast.LENGTH_SHORT).show();
+
+                int priority = favLoc.getPriority();
+
+                removeLocation_firebase(favLoc.getTitle());
+                local_favLocList.remove(favLoc);
                 editLocation(favLoc, markerTitle);
                 addLocation_firebase(favLoc);
+                initializeAdapter();
+                updateDataSet();
+                Toast.makeText(context, "Refresh Page Please...", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -138,16 +146,18 @@ public class LocalFavoriteLocationFragment extends ListFragment implements Favor
 
     private void addLocation_firebase(FavoriteLocation favLoc)
     {
-        String firebaseUrl = Constants.FIREBASE_URL+SettingsFragment.getUser_name()+Constants.FAV_LOC_URL+favLoc.getTitle();
-        Firebase fBase = new Firebase(firebaseUrl);
+        Firebase fBase = new Firebase(Constants.FIREBASE_URL + SettingsFragment.getUser_name() +
+                Constants.FAV_LOC_URL + favLoc.getTitle());
         fBase.setValue(favLoc);
+        updateDataSet();
     }
 
-    private void removeLocation_firebase(FavoriteLocation favLoc)
+    private void removeLocation_firebase(final String favLocTitle)
     {
-        String firebaseUrl = Constants.FIREBASE_URL+SettingsFragment.getUser_name()+Constants.FAV_LOC_URL+favLoc.getTitle();
-        Firebase fBase = new Firebase(firebaseUrl);
+        Firebase fBase = new Firebase(Constants.FIREBASE_URL + SettingsFragment.getUser_name() +
+                Constants.FAV_LOC_URL + favLocTitle);
         fBase.removeValue();
+        updateDataSet();
     }
 
     @Override

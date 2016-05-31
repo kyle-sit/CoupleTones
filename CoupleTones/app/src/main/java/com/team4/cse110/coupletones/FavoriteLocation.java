@@ -22,6 +22,7 @@ public class FavoriteLocation
     private double latitude;
     private double longitude;
     private MarkerOptions markerOptions;
+    private int priority;
 
     /* default constructor */
     public FavoriteLocation()
@@ -34,10 +35,12 @@ public class FavoriteLocation
         longitude = 0;
         location = new LatLng(latitude, longitude);
         setMarkerOptions();
+
+        priority = 0;
     }
 
     /* use member variables from the arg marker to construct a FavoriteLocation */
-    public FavoriteLocation(Marker marker){
+    public FavoriteLocation(Marker marker, int priority){
         this.title = marker.getTitle();
         this.marker = marker;
         this.location = marker.getPosition();
@@ -50,10 +53,11 @@ public class FavoriteLocation
         this.longitude = location.longitude;
         setMarkerOptions();
 
+        this.priority = priority;
     }
 
     /* changes the name of the Favorite Location */
-    public FavoriteLocation(MarkerOptions markerOptions)
+    public FavoriteLocation(MarkerOptions markerOptions, int priority)
     {
         this.title = markerOptions.getTitle();
         this.marker = null;
@@ -65,9 +69,10 @@ public class FavoriteLocation
         this.longitude = location.longitude;
         setMarkerOptions();
 
+        this.priority = priority;
     }
 
-    public FavoriteLocation(double latitude, double longitude, String snippet, String title)
+    public FavoriteLocation(double latitude, double longitude, String snippet, String title, int priority)
     {
         this.title = title;
         this.snippet = snippet;
@@ -80,8 +85,19 @@ public class FavoriteLocation
 
         this.location = new LatLng(latitude, longitude);
         setMarkerOptions();
+
+        this.priority = priority;
     }
 
+    public void setPriority(int priority)
+    {
+        this.priority = priority;
+    }
+
+    public int getPriority()
+    {
+        return this.priority;
+    }
     public void editName(String name)
     {
         if (marker != null) {

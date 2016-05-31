@@ -52,7 +52,6 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     private float zoomLevel = 15.0f;
     private int priorityCount = 0;
 
-
     /*
      * citation for aid: http://developer.android.com/training/maps/index.html
      */
@@ -194,7 +193,7 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
 
                 //create the marker and add it to the map
                 Marker tempMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(markerTitle));
-                addLocation(new FavoriteLocation(tempMarker));
+                addLocation(new FavoriteLocation(tempMarker, priorityCount++));
 
             }
         });
@@ -223,7 +222,8 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
             }
             for (FavoriteLocation favLoc: partner_favLocList)
             {
-                mMap.addMarker(favLoc.getMarkerOptions().icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                mMap.addMarker(favLoc.getMarkerOptions().icon(
+                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
             }
         }
     }
@@ -232,15 +232,16 @@ public class GMapFragment extends Fragment implements OnMapReadyCallback, Favori
     @Override
     public void addLocation(FavoriteLocation favoriteLocation)
     {
-        Toast.makeText(getContext(), "Successfully added '"+favoriteLocation.getTitle()+"'", Toast.LENGTH_SHORT).show();
         addLocation_firebase(favoriteLocation);
+        Toast.makeText(getContext(), "Successfully added '"+favoriteLocation.getTitle()+"'", Toast.LENGTH_SHORT).show();
+
     }
 
     private void addLocation_firebase(FavoriteLocation favLoc)
     {
         String firebaseUrl = Constants.FIREBASE_URL+SettingsFragment.getUser_name()+Constants.FAV_LOC_URL;
         Firebase fBase = new Firebase(firebaseUrl);
-        fBase.child(favLoc.getTitle()).setValue(favLoc, priorityCount++);
+        fBase.child(favLoc.getTitle()).setValue(favLoc);
     }
 
     @Override

@@ -20,6 +20,8 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Set;
 
 
@@ -48,6 +50,7 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
     private Firebase firebase_addLocalFavLoc_partner;
     private Query query_addLocalFavLoc_partner;
     private ChildEventListener childEventListener_partner;
+    private Comparator<FavoriteLocation> favoriteLocationComparator;
 
     public SettingsFragment()
     {
@@ -55,35 +58,34 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
         {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (dataSnapshot != null) {
-                    FavoriteLocation favoriteLocation = dataSnapshot.getValue(FavoriteLocation.class);
+                if (dataSnapshot != null)
+                {
                     double latitude = dataSnapshot.child("latitude").getValue(double.class);
                     double longitude = dataSnapshot.child("longitude").getValue(double.class);
                     String snippet = dataSnapshot.child("snippet").getValue(String.class);
                     String title = dataSnapshot.child("title").getValue(String.class);
+                    int priority = dataSnapshot.child("priority").getValue(int.class);
 
-                    local_favLocList.add(new FavoriteLocation(latitude, longitude, snippet, title));
+                    local_favLocList.add(new FavoriteLocation(latitude, longitude, snippet, title, priority));
+                    Collections.sort(local_favLocList, favoriteLocationComparator);
+
                 }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+            public void onChildRemoved(DataSnapshot dataSnapshot){
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+            public void onChildMoved(DataSnapshot dataSnapshot, String s){
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
             }
         };
 
@@ -91,38 +93,52 @@ public class SettingsFragment extends Fragment implements FavoriteLocationsList
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null) {
-                    FavoriteLocation favoriteLocation = dataSnapshot.getValue(FavoriteLocation.class);
                     double latitude = dataSnapshot.child("latitude").getValue(double.class);
                     double longitude = dataSnapshot.child("longitude").getValue(double.class);
                     String snippet = dataSnapshot.child("snippet").getValue(String.class);
                     String title = dataSnapshot.child("title").getValue(String.class);
+                    int priority = dataSnapshot.child("priority").getValue(int.class);
 
-                    partner_favLocList.add(new FavoriteLocation(latitude, longitude, snippet, title));
+                    partner_favLocList.add(new FavoriteLocation(latitude, longitude, snippet, title, priority));
+                    Collections.sort(partner_favLocList, favoriteLocationComparator);
+
                 }
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
             }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
             }
         };
 
         partner_name = "";
+
+        favoriteLocationComparator = new Comparator<FavoriteLocation>() {
+            @Override
+            public int compare(FavoriteLocation lhs, FavoriteLocation rhs)
+            {
+                if (lhs.getPriority() > rhs.getPriority())
+                {
+                    return 1;
+                }
+                if (lhs.getPriority() < rhs.getPriority())
+                {
+                    return -1;
+                }
+                return 0;
+            }
+        };
     }
 
     public static SettingsFragment newInstance(String param1, String param2)
